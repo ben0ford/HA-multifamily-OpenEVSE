@@ -99,9 +99,6 @@ The charge continues under charger control until the car says "no more" or the c
 
 Finally, when the user unplugs, the end_charge_unplug automation runs script.save_charge_event, and this time includes the session_charge. It then disables the charger, resets session_charge to $0.00, clears user_name, and sets charge_type to "available."
 
-### Calculating costs
-The OpenEVSE integration provides 
-
 ### Automations
 * eco_9am_start: Runs at 9:00 a.m., checks all charge_type helpers, and any with the value "eco waiting" run script.start_charge to initate a charge
 * end_charge_no_current: If the charging_status sensor for a charger changes from "charging" to anything else, check that it's not because of the 4pm-9pm charging pause, and then save charge event and set charge_type to "charge complete"
@@ -125,7 +122,10 @@ Helpers are in the directory config/charger_helpers. Each charger uses these hel
 * sensor.01_total_cost: Uses the integral integration to integrate (in the calculus sense) the cost_per_hour sensor. This gives accumulation of costs.
 * number.01_session_cost_2 : Just the difference between the charger's total_cost and last_saved_total_cost to give the current session cost to display on the charger page (and record when charging is done)
 * I previously tried a [utility meter](https://www.home-assistant.io/integrations/utility_meter/) for session cost but got weird results, so switched to the simple model above.
- 
+
+### Calculating costs
+A little more detail: The OpenEVSE integration provides the ```sensor.openevse_fs_01_charging_current``` sensor. Multiplying this by the present electricity rate and adjusting units correctly gives a cost per hour sensor. The integral (in the calculus sense) over time of "cost per hour" is "cost" for the period of time that was integrated.
+
 ## Installing a charger
 An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
 
