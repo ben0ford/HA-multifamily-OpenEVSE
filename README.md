@@ -7,6 +7,8 @@ We have 25 OpenEVSE chargers in a shared parking lot for a community of 30 homes
 
 ### User interface
 Users control chargers through the HA mobile app. The default (Overview) dashboard has a button for each charger. The button's color and icon give a little info about the charger: Green = available; Blue = charge initiated; zzz = charge complete but car still plugged in.
+<img src="https://github.com/user-attachments/assets/6cdb4aa1-43b5-41cf-9fc4-e49926401187" width="150">
+
 ![Screenshot_20250421-213927](https://github.com/user-attachments/assets/6cdb4aa1-43b5-41cf-9fc4-e49926401187 | width=150)
 
 Tapping one of those buttons takes you to the charger's dashboard:
