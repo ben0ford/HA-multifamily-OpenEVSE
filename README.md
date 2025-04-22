@@ -29,10 +29,15 @@ When the user unplugs, the session cost (and other info, including user name, us
 
 ### Admin interface
 Administrators have a similar Overview dashboard with the addition of "Admin Tools," 
-![Screenshot_20250421-214030](https://github.com/user-attachments/assets/fb4e73cb-6a7a-4eda-bbcb-3645a6c79b76)![Screenshot_20250421-214040](https://github.com/user-attachments/assets/483e77e1-8e90-4480-94a4-6b8a58b7d7e3)
+
+<img src="https://github.com/user-attachments/assets/fb4e73cb-6a7a-4eda-bbcb-3645a6c79b76" alt="Screenshot_20250421-214030" width="250">
+<img src="https://github.com/user-attachments/assets/483e77e1-8e90-4480-94a4-6b8a58b7d7e3" alt="Screenshot_20250421-214040" width="250">
 
 The Admin Tools charger button for a charger leads to an Admin dashboard which gives access to most charger controls and sensors, including a rudimentary "Disable charger" button that makes the charger's button on the (user) Overview dashboard inoperable.
-![Screenshot_20250421-214058](https://github.com/user-attachments/assets/aa5bdec9-a722-4674-a018-e77d1527f777)![Screenshot_20250421-214127](https://github.com/user-attachments/assets/f8d44614-f756-4e6a-9030-d2ea9d448376)
+
+
+<img src="https://github.com/user-attachments/assets/aa5bdec9-a722-4674-a018-e77d1527f777" alt="Screenshot_20250421-214058" width="250">
+<img src="https://github.com/user-attachments/assets/f8d44614-f756-4e6a-9030-d2ea9d448376" alt="Screenshot_20250421-214127" width="250">
 
 
 ## Installing a charger
