@@ -19,6 +19,9 @@ Three buttons on the charger dashboard (left side) start a charge. The 3 types:
 * "normal," avoiding expensive 4:00–9:00 p.m. charging,
 * "eco," which starts a normal charge if the current time is between 9:00 a.m and 2:00 p.m.; otherwise waits until 9:00 a.m. to start charging and then initiates a normal charge (here in California, we have so much solar on the grid that the lowest-carbon electricity is mid-day)
 * "override," which starts a charge immediately and ignores our usual 4:00–9:00 p.m. lockout (this button has a confirmation pop up for the user to confirm).
+
+Each charge type runs a check for a connected vehicle, and waits for about 45 seconds before prompting the user "no car? Try again" and setting the charger back to Available.
+
 The Stop Charge button also has a pop-up confirmation. We don't restrict access to stop a charge to the user who started it (or to someone else with the same account), but it wouldn't be hard to do.
 
 The right side of the charger dashboard shows various status info for the charger: charge type, user, charging time, plugged-in status, current, energy dispensed this session, present electricity cost, and session cost.
@@ -39,17 +42,9 @@ The Admin Tools charger button for a charger leads to an Admin dashboard which g
 <img src="https://github.com/user-attachments/assets/aa5bdec9-a722-4674-a018-e77d1527f777" alt="Screenshot_20250421-214058" width="250">
 <img src="https://github.com/user-attachments/assets/f8d44614-f756-4e6a-9030-d2ea9d448376" alt="Screenshot_20250421-214127" width="250">
 
+## General HA setup
 
-## Installing a charger
-An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
-
-In the OpenEVSE setup process, or in the web interface, set the following on the charger:
-* Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
-* Host Name: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
-* Time zone
-* User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
-
-## Integrations required:
+### Integrations required:
 * [MIDAS](https://github.com/MattDahEpic/ha-midas) (California-specific, for automatically updating utility rates)
 * [OpenEVSE](https://github.com/firstof9/openevse/) Component to integrate with OpenEVSE chargers. There are two integrations with this name; be sure you get the one by firstof9.
 * HACS
@@ -62,3 +57,29 @@ We also use the integrations below, though they are not specific to the OpenEVSE
 * [Mobile App](https://www.home-assistant.io/integrations/mobile_app/) (auto-enabled)
 * [Backup](https://www.home-assistant.io/integrations/backup/)
 * [Google Drive](https://www.home-assistant.io/integrations/google_drive/) (for storing backups)
+
+### Dashboards
+All dashboards are in yaml mode so that we can use !include statements.
+
+Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard /homeassistant/dashboards/08/fs-08.yaml, in total, is
+
+```
+# The only value that needs to be changed from dashboard to dashboard is the
+# charger number, which we get via Javascript and the dashboard URL
+
+decluttering_templates: !include /config/decluttering_templates/charger_dashboard_decluttering_templates.yaml
+
+views: !include /config/dashboards/user_charger_master.yaml
+```
+
+
+## Installing a charger
+An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
+
+In the OpenEVSE setup process, or in the web interface, set the following on the charger:
+* Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
+* Host Name: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
+* Time zone
+* User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
+
+
