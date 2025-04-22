@@ -51,12 +51,14 @@ The Admin Tools charger button for a charger leads to an Admin dashboard which g
 ### Integrations required:
 * [MIDAS](https://github.com/MattDahEpic/ha-midas) (California-specific, for automatically updating utility rates)
 * [OpenEVSE](https://github.com/firstof9/openevse/) Component to integrate with OpenEVSE chargers. There are two integrations with this name; be sure you get the one by firstof9.
-* HACS
+* [HACS](https://www.hacs.xyz/)
 * [File](https://www.home-assistant.io/integrations/file/) for logging charging sessions (file set to /config/ev_logs/charge_sessions)
   * We are considering switching to [Google Sheets](https://www.home-assistant.io/integrations/google_sheets/) integration to save directly to an (off-site) spreadsheet
 * [Time and Date](https://www.home-assistant.io/integrations/time_date/)
 * [Browser Mod](https://github.com/thomasloven/hass-browser_mod)
 * [Integral](https://www.home-assistant.io/integrations/integration/)
+* [Custom Button-card](https://github.com/custom-cards/button-card?tab=readme-ov-file#installation)
+* 
 
 We also use the integrations below, though they are not specific to the OpenEVSE project
 * [Mobile App](https://www.home-assistant.io/integrations/mobile_app/) (auto-enabled)
