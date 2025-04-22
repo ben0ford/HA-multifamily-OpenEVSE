@@ -7,6 +7,8 @@ This is not a plug-and-play HA "integration." You'll need to have someone who is
 
 Our chargers are actually former JuiceBox chargers with their control boards replaced with OpenEVSE drop-in replacements ([version 1--metal box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v1-metal-black-and-orange); [version 2--plastic box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v2-plastic-grey-and-white)). Also get a [temperature sensor](https://store.openevse.com/collections/all-products/products/temperature-sensor) since the replacement board doesn't have one onboard. The brain-transplant chargers behave exactly like a standard OpenEVSE build, as far as I can tell.
 
+Thirty-three users have been using the system for a few weeks now, after a month of more limited testing, and it's SO much more stable and functional than Juicenet ever was. Plus our data for billing is much better.
+
 ## Functionality
 
 ### User interface
@@ -86,7 +88,7 @@ Sample sequence of events when a user "ben" wants to charge at charger FS-09:
 1. User plugs in car 
 2. Presses "Normal Charge" on the FS-09 user dashboard
 3. ```script.start_charge``` initiated with data ```user_name: ben```, ```charge_type: normal```, ```charger_id: 09```
-4. text helper ```input_text.09_user_name``` set to "ben"; text helper ```input_text.09_charge_type set``` to "normal"
+4. text helper ```input_text.09_user_name``` set to "ben"; text helper ```input_text.09_charge_type``` set to "normal"
 5. ```script.save_charge_event``` runs to save event to log file (CSV) with data
 ```
    * ev_username: "{{ user_name }}"
@@ -96,7 +98,7 @@ Sample sequence of events when a user "ben" wants to charge at charger FS-09:
    * totalcost: "{{ start_total_cost }}" # running total of $ value of charging delivered to date 
    * user_unit: "{{ user_unit }}" # unit number associated to the user; our version of "account"
 ```
-6. script.start_charge turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets ```charge_type``` to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
+6. ```script.start_charge``` turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets ```charge_type``` to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
 7. ```script.start_charge`` exits
 
 The charge continues under charger control until the car says "no more" or the charger's "Stop" button on its dashboard is pressed. When charger current drops to 0, the no_current automation runs script.save_charge_event to log an event, and sets the charge_type helper to "charge complete" (which has the effect of switching the icon on the Overview dashboard to "zzz").
