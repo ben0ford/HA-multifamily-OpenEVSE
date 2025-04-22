@@ -66,7 +66,7 @@ We also use the integrations below, though they are not specific to the OpenEVSE
 ### Dashboards
 All dashboards are in yaml mode so that we can use !include statements.
 
-Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard /homeassistant/dashboards/08/fs-08.yaml, in total, is below. This allows us to change all charger dashboards at once by just changing the !include'd file. Same idea for the admin charger dashboards. We make ample use of HA's custom:button-card (to get javascript templating) and decluttering templates.
+Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard ```/homeassistant/dashboards/08/fs-08.yaml```, in total, is below. This allows us to change all charger dashboards at once by just changing the !include'd file. Same idea for the admin charger dashboards. We make ample use of HA's custom:button-card (to get javascript templating) and decluttering templates.
 
 Our scripts and automations hard-code in the prefix "FS-" so you'll have to modify for however you name your chargers.
 
@@ -86,44 +86,46 @@ Sample sequence of events when a user "ben" wants to charge at charger FS-09:
 3. Script start_charge initiated with data user_name: ben, charge_type: normal, charger_id: 09
 4. text helper input_text.09_user_name set to "ben"; text helper input_text.09_charge_type set to "normal"
 5. script.save_charge_event runs to save event to log file (CSV) with data
+```
    * ev_username: "{{ user_name }}"
    * chargerid: "{{ charger_id }}"
    * eventtype: "{{ charge_type }}"
    * totalusage: "{{ start_usage }}" # charger-reported total kWh delivered to date
    * totalcost: "{{ start_total_cost }}" # running total of $ value of charging delivered to date 
    * user_unit: "{{ user_unit }}" # unit number associated to the user; our version of "account"
-6. Script turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets charge_type to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
+```
+6. Script turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets ```charge_type``` to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
 7. Script exits
 
 The charge continues under charger control until the car says "no more" or the charger's "Stop" button on its dashboard is pressed. When charger current drops to 0, the no_current automation runs script.save_charge_event to log an event, and sets the charge_type helper to "charge complete" (which has the effect of switching the icon on the Overview dashboard to "zzz").
 
-Finally, when the user unplugs, the end_charge_unplug automation runs script.save_charge_event, and this time includes the session_charge. It then disables the charger, resets session_charge to $0.00, clears user_name, and sets charge_type to "available."
+Finally, when the user unplugs, the ```end_charge_unplug``` automation runs ```script.save_charge_event```, and this time includes the ```session_charge```. It then disables the charger, resets ```session_charge``` to $0.00, clears ```user_name```, and sets ```charge_type``` to "available."
 
 ### Automations
-* eco_9am_start: Runs at 9:00 a.m., checks all charge_type helpers, and any with the value "eco waiting" run script.start_charge to initate a charge
-* end_charge_no_current: If the charging_status sensor for a charger changes from "charging" to anything else, check that it's not because of the 4pm-9pm charging pause, and then save charge event and set charge_type to "charge complete"
-* end_charge_unplug: When a charger's vehicle_connected sensor changes to "unplugged," this disables the charger, logs the event (including session_cost), resets session_cost to $0, clears user_name, and sets charge_type to "available"
-* plug_in_save_event: Logs charger plug-ins. No user available, so just saves charger_id and total $ and kWh on that charger to date
-* reload_charger: We have one charger that is having trouble staying connected to HA, so this reloads a charger if it becomes unavailable
-* update_off_peak_price/super/peak: These update the electricity tariffs once a day. California-specific tool.
+* ```eco_9am_start```: Runs at 9:00 a.m., checks all charge_type helpers, and any with the value "eco waiting" run ```script.start_charge``` to initate a charge
+* ```end_charge_no_current```: If the ```charging_status``` sensor for a charger changes from "charging" to anything else, check that it's not because of the 4pm-9pm charging pause, and then save charge event and set ```charge_type``` to "charge complete"
+* ```end_charge_unplug```: When a charger's ```vehicle_connected``` sensor changes to "unplugged," this disables the charger, logs the event (including ```session_cost```), resets ```session_cost``` to $0, clears ```user_name```, and sets ```charge_type``` to "available"
+* ```plug_in_save_event```: Logs charger plug-ins. No user available, so just saves ```charger_id``` and total $ and kWh on that charger to date
+* ```reload_charger```: We have one charger that is having trouble staying connected to HA, so this reloads a charger if it becomes unavailable
+* ```update_off_peak_price/super/peak```: These update the electricity tariffs once a day. California-specific tool.
 
 ### Scripts
-* end_charge: called by other automations and scripts. Receives user_name, charger_id, event_type from calling entity, runs script.save_charge_event, disables charger, sets charge_type to "available", clears user_name
-* save_charge_event: uses File integration to save a line to a comma-separated values file. Fields saved include user_unit, time, user_name, charger_id, event_type, total_usage, total_cost, and session_cost (session_cost only saved for unplug events)
-* start_charge: receives user_name, charger_id, charge_type from button press. Sets charge_type helper and user_name helper, saves start event, starts appropriate charge (see Sequence section above)
+* ```end_charge```: called by other automations and scripts. Receives ```user_name```, ```charger_id```, ```event_type``` from calling entity, runs ```script.save_charge_event```, disables charger, sets ```charge_type``` to "available", clears ```user_name```
+* ```save_charge_event```: uses File integration to save a line to a comma-separated values file. Fields saved include ```user_unit```, time, ```user_name```, ```charger_id```, ```event_type```, ```total_usage```, ```total_cost```, and ```session_cost``` (```session_cost``` only saved for unplug events)
+* ```start_charge```: receives ```user_name```, ```charger_id```, ```charge_type``` from button press. Sets ```charge_type``` helper and ```user_name``` helper, saves start event, starts appropriate charge (see Sequence section above)
 
 ### Helpers
 Helpers are in the directory config/charger_helpers. Each charger uses these helpers (using name for charger FS-01)
-* input_number.fs_0_which_button : controls display of additional info on the charger dashboard
-* input_number.01_last_saved_total_cost : saves the "total_cost" value at the end of the previous charging session
-* input_text.01_user_name
-* input_text.01_charge_type
-* sensor.01_cost_per_hour: calculates current $ rate of charging by multiplying sensor.openevse_fs_01_charging_current by sensor.electricity_rate by sensor.openevse_fs_01_charging_voltage (units: (amps)*($/kWh)*(volts)/1000 = ($*watts)/(kW*hour*1000) = $/hr) 
-* sensor.01_total_cost: Uses the integral integration to integrate (in the calculus sense) the cost_per_hour sensor. This gives accumulation of costs.
-* number.01_session_cost_2 : Just the difference between the charger's total_cost and last_saved_total_cost to give the current session cost to display on the charger page (and record when charging is done)
+* ```input_number.fs_0_which_button``` : controls display of additional info on the charger dashboard
+* ```input_number.01_last_saved_total_cost``` : saves the "total_cost" value at the end of the previous charging session
+* ```input_text.01_user_name```
+* ```input_text.01_charge_type```
+* ```sensor.01_cost_per_hour```: calculates current $ rate of charging by multiplying ```sensor.openevse_fs_01_charging_current``` by ```sensor.electricity_rate``` by ```sensor.openevse_fs_01_charging_voltage``` (units: (amps)*($/kWh)*(volts)/1000 = ($*watts)/(kW*hour*1000) = $/hr) 
+* ```sensor.01_total_cost```: Uses the integral integration to integrate (in the calculus sense) the ```cost_per_hour sensor```. This gives accumulation of cost.
+* ```number.01_session_cost_2```: Just the difference between the charger's ```total_cost``` and ```last_saved_total_cost``` to give the current session cost to display on the charger page (and record when charging is done)
 * I previously tried a [utility meter](https://www.home-assistant.io/integrations/utility_meter/) for session cost but got weird results, so switched to the simple model above.
 
-### Calculating costs
+#### Calculating costs
 A little more detail: The OpenEVSE integration provides the ```sensor.openevse_fs_01_charging_current``` sensor. Multiplying this by the present electricity rate and adjusting units correctly gives a cost per hour sensor. The integral (in the calculus sense) over time of "cost per hour" is "cost" for the period of time that was integrated.
 
 ## Installing a charger
