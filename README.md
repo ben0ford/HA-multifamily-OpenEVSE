@@ -1,7 +1,11 @@
 # HA-multifamily-OpenEVSE
 Home Assistant (HA) scripts, automations, helpers, etc. to enable management of multiple OpenEVSE chargers: user management, cost logging, etc. 
 
-We have 25 OpenEVSE chargers in a shared parking lot for a community of 30 homes. This Home Assistant implementation allows all users to use any charger, with several charging options. User charging session costs are computed live, based on automatically-updated electricity rates; sessions and costs are logged for billing purposes.
+We have 25 OpenEVSE chargers in a shared parking lot for a community of 30 homes. This Home Assistant implementation allows all users to use any charger, with several charging options. User charging session costs are computed live, based on automatically-updated electricity rates; sessions and costs are logged for billing purposes. Many decisions are particular to our application (e.g. letting all users see who is charging where). Also, neither of us who wrote this is an accomplished programmer, so apologies if things are clunky.
+
+This is not a plug-and-play HA "integration." You'll need to have someone who is willing to dive into the yaml files and their Jinja2 and javascript templates. If anyone wants to create a more robust and transportable system, we're happy to help if we can.
+
+Our chargers are actually former JuiceBox chargers with their control boards replaced with OpenEVSE drop-in replacements ([version 1--metal box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v1-metal-black-and-orange); [version 2--plastic box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v2-plastic-grey-and-white)). Also get a [temperature sensor](https://store.openevse.com/collections/all-products/products/temperature-sensor) since the replacement board doesn't have one onboard. The brain-transplant chargers behave exactly like a standard OpenEVSE build, as far as I can tell.
 
 ## Functionality
 
@@ -52,6 +56,7 @@ The Admin Tools charger button for a charger leads to an Admin dashboard which g
   * We are considering switching to [Google Sheets](https://www.home-assistant.io/integrations/google_sheets/) integration to save directly to an (off-site) spreadsheet
 * [Time and Date](https://www.home-assistant.io/integrations/time_date/)
 * [Browser Mod](https://github.com/thomasloven/hass-browser_mod)
+* [Integral](https://www.home-assistant.io/integrations/integration/)
 
 We also use the integrations below, though they are not specific to the OpenEVSE project
 * [Mobile App](https://www.home-assistant.io/integrations/mobile_app/) (auto-enabled)
@@ -86,9 +91,41 @@ Sample sequence of events when a user "ben" wants to charge at charger FS-09:
    * eventtype: "{{ charge_type }}"
    * totalusage: "{{ start_usage }}" # charger-reported total kWh delivered to date
    * totalcost: "{{ start_total_cost }}" # running total of $ value of charging delivered to date 
-   * user_unit: "{{ user_unit }}"
-6.  
+   * user_unit: "{{ user_unit }}" # unit number associated to the user; our version of "account"
+6. Script turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets charge_type to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
+7. Script exits
 
+The charge continues under charger control until the car says "no more" or the charger's "Stop" button on its dashboard is pressed. When charger current drops to 0, the no_current automation runs script.save_charge_event to log an event, and sets the charge_type helper to "charge complete" (which has the effect of switching the icon on the Overview dashboard to "zzz").
+
+Finally, when the user unplugs, the end_charge_unplug automation runs script.save_charge_event, and this time includes the session_charge. It then disables the charger, resets session_charge to $0.00, clears user_name, and sets charge_type to "available."
+
+### Calculating costs
+The OpenEVSE integration provides 
+
+### Automations
+* eco_9am_start: Runs at 9:00 a.m., checks all charge_type helpers, and any with the value "eco waiting" run script.start_charge to initate a charge
+* end_charge_no_current: If the charging_status sensor for a charger changes from "charging" to anything else, check that it's not because of the 4pm-9pm charging pause, and then save charge event and set charge_type to "charge complete"
+* end_charge_unplug: When a charger's vehicle_connected sensor changes to "unplugged," this disables the charger, logs the event (including session_cost), resets session_cost to $0, clears user_name, and sets charge_type to "available"
+* plug_in_save_event: Logs charger plug-ins. No user available, so just saves charger_id and total $ and kWh on that charger to date
+* reload_charger: We have one charger that is having trouble staying connected to HA, so this reloads a charger if it becomes unavailable
+* update_off_peak_price/super/peak: These update the electricity tariffs once a day. California-specific tool.
+
+### Scripts
+* end_charge: called by other automations and scripts. Receives user_name, charger_id, event_type from calling entity, runs script.save_charge_event, disables charger, sets charge_type to "available", clears user_name
+* save_charge_event: uses File integration to save a line to a comma-separated values file. Fields saved include user_unit, time, user_name, charger_id, event_type, total_usage, total_cost, and session_cost (session_cost only saved for unplug events)
+* start_charge: receives user_name, charger_id, charge_type from button press. Sets charge_type helper and user_name helper, saves start event, starts appropriate charge (see Sequence section above)
+
+### Helpers
+Helpers are in the directory config/charger_helpers. Each charger uses these helpers (using name for charger FS-01)
+* input_number.fs_0_which_button : controls display of additional info on the charger dashboard
+* input_number.01_last_saved_total_cost : saves the "total_cost" value at the end of the previous charging session
+* input_text.01_user_name
+* input_text.01_charge_type
+* sensor.01_cost_per_hour: calculates current $ rate of charging by multiplying sensor.openevse_fs_01_charging_current by sensor.electricity_rate by sensor.openevse_fs_01_charging_voltage (units: (amps)*($/kWh)*(volts)/1000 = ($*watts)/(kW*hour*1000) = $/hr) 
+* sensor.01_total_cost: Uses the integral integration to integrate (in the calculus sense) the cost_per_hour sensor. This gives accumulation of costs.
+* number.01_session_cost_2 : Just the difference between the charger's total_cost and last_saved_total_cost to give the current session cost to display on the charger page (and record when charging is done)
+* I previously tried a [utility meter](https://www.home-assistant.io/integrations/utility_meter/) for session cost but got weird results, so switched to the simple model above.
+ 
 ## Installing a charger
 An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
 
