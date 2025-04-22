@@ -61,7 +61,9 @@ We also use the integrations below, though they are not specific to the OpenEVSE
 ### Dashboards
 All dashboards are in yaml mode so that we can use !include statements.
 
-Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard /homeassistant/dashboards/08/fs-08.yaml, in total, is
+Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard /homeassistant/dashboards/08/fs-08.yaml, in total, is below. This allows us to change all charger dashboards at once by just changing the !include'd file. Same idea for the admin charger dashboards. We make ample use of HA's custom:button-card (to get javascript templating) and decluttering templates.
+
+Our scripts and automations hard-code in the prefix "FS-" so you'll have to modify for however you name your chargers.
 
 ```
 # The only value that needs to be changed from dashboard to dashboard is the
@@ -72,6 +74,20 @@ decluttering_templates: !include /config/decluttering_templates/charger_dashboar
 views: !include /config/dashboards/user_charger_master.yaml
 ```
 
+### Sequence for a charger
+Sample sequence of events when a user "ben" wants to charge at charger FS-09:
+1. User plugs in car 
+2. Presses "Normal Charge" on the FS-09 user dashboard
+3. Script start_charge initiated with data user_name: ben, charge_type: normal, charger_id: 09
+4. text helper input_text.09_user_name set to "ben"; text helper input_text.09_charge_type set to "normal"
+5. script.save_charge_event runs to save event to log file (CSV) with data
+   * ev_username: "{{ user_name }}"
+   * chargerid: "{{ charger_id }}"
+   * eventtype: "{{ charge_type }}"
+   * totalusage: "{{ start_usage }}" # charger-reported total kWh delivered to date
+   * totalcost: "{{ start_total_cost }}" # running total of $ value of charging delivered to date 
+   * user_unit: "{{ user_unit }}"
+6.  
 
 ## Installing a charger
 An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
