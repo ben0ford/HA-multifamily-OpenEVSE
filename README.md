@@ -17,7 +17,7 @@ Tapping one of those buttons takes you to the charger's dashboard:
 
 Three buttons on the charger dashboard (left side) start a charge. The 3 types: 
 * "normal," avoiding expensive 4:00–9:00 p.m. charging,
-* "eco," which starts a normal charge if the current time is between 9:00 a.m and 2:00 p.m.; otherwise waits until 9:00 a.m. to start charging and then initiates a normal charge
+* "eco," which starts a normal charge if the current time is between 9:00 a.m and 2:00 p.m.; otherwise waits until 9:00 a.m. to start charging and then initiates a normal charge (here in California, we have so much solar on the grid that the lowest-carbon electricity is mid-day)
 * "override," which starts a charge immediately and ignores our usual 4:00–9:00 p.m. lockout (this button has a confirmation pop up for the user to confirm).
 The Stop Charge button also has a pop-up confirmation. We don't restrict access to stop a charge to the user who started it (or to someone else with the same account), but it wouldn't be hard to do.
 
@@ -35,10 +35,14 @@ The Admin Tools charger button for a charger leads to an Admin dashboard which g
 ![Screenshot_20250421-214058](https://github.com/user-attachments/assets/aa5bdec9-a722-4674-a018-e77d1527f777)![Screenshot_20250421-214127](https://github.com/user-attachments/assets/f8d44614-f756-4e6a-9030-d2ea9d448376)
 
 
+## Installing a charger
+An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
 
-
-
-
+In the OpenEVSE setup process, or in the web interface, set the following on the charger:
+* Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
+* Host Name: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
+* Time zone
+* User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
 
 ## Integrations required:
 * [MIDAS](https://github.com/MattDahEpic/ha-midas) (California-specific, for automatically updating utility rates)
