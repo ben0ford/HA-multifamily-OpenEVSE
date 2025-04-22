@@ -18,18 +18,22 @@ Tapping one of those buttons takes you to the charger's dashboard:
 Three buttons on the charger dashboard (left side) start a charge. The 3 types: 
 * "normal," avoiding expensive 4:00–9:00 p.m. charging,
 * "eco," which starts a normal charge if the current time is between 9:00 a.m and 2:00 p.m.; otherwise waits until 9:00 a.m. to start charging and then initiates a normal charge
-* "override," which starts a charge immediately and ignores our usual 4:00–9:00 p.m. lockout.
+* "override," which starts a charge immediately and ignores our usual 4:00–9:00 p.m. lockout (this button has a confirmation pop up for the user to confirm).
+The Stop Charge button also has a pop-up confirmation. We don't restrict access to stop a charge to the user who started it (or to someone else with the same account), but it wouldn't be hard to do.
 
 The right side of the charger dashboard shows various status info for the charger: charge type, user, charging time, plugged-in status, current, energy dispensed this session, present electricity cost, and session cost.
 
-When a user plugs in then hits one of those buttons, the charger button changes to blue with a charging icon on the Overview dashboard, the charge type and user name update in the status column on the right, and the start_charge script is initated, which uses the type of charge selected to set up charging.
+When a user plugs in then taps one of those buttons, the charger button on the Overview dashboard changes to blue with a charging icon, the charge type and user name update in the status column on the right, and the start_charge script is initated, which uses the type of charge selected to set up charging.
+
+When the user unplugs, the session cost (and other info, including user name, user account, time stamp) is logged, and the session cost resets to $0.00. We haven't yet built a way for users to see their charging history, but it's on the to-do list.
 
 ### Admin interface
 Administrators have a similar Overview dashboard with the addition of "Admin Tools," 
 ![Screenshot_20250421-214030](https://github.com/user-attachments/assets/fb4e73cb-6a7a-4eda-bbcb-3645a6c79b76)![Screenshot_20250421-214040](https://github.com/user-attachments/assets/483e77e1-8e90-4480-94a4-6b8a58b7d7e3)
 
-The Admin Tools charger buttons lead to an Admin dashboard which gives access to most charger controls and sensors, including a rudimentary "Disable charger" button that makes the charger's button on the (user) Overview dashboard inoperable.
+The Admin Tools charger button for a charger leads to an Admin dashboard which gives access to most charger controls and sensors, including a rudimentary "Disable charger" button that makes the charger's button on the (user) Overview dashboard inoperable.
 ![Screenshot_20250421-214058](https://github.com/user-attachments/assets/aa5bdec9-a722-4674-a018-e77d1527f777)![Screenshot_20250421-214127](https://github.com/user-attachments/assets/f8d44614-f756-4e6a-9030-d2ea9d448376)
+
 
 
 
