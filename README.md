@@ -120,7 +120,7 @@ Helpers are in the directory config/charger_helpers. Each charger uses these hel
 * ```input_number.01_last_saved_total_cost``` : saves the "total_cost" value at the end of the previous charging session
 * ```input_text.01_user_name```
 * ```input_text.01_charge_type```
-* ```sensor.01_cost_per_hour```: calculates current $ rate of charging by multiplying ```sensor.openevse_fs_01_charging_current``` by ```sensor.electricity_rate``` by ```sensor.openevse_fs_01_charging_voltage``` (units: (amps)*($/kWh)*(volts)/1000 = ($*watts)/(kW*hour*1000) = $/hr) 
+* ```sensor.01_cost_per_hour```: calculates current $ rate of charging by multiplying ```sensor.openevse_fs_01_charging_current``` by ```sensor.electricity_rate``` by ```sensor.openevse_fs_01_charging_voltage``` (units: (amps)*($/kWh)*(volts)/1000 = ($*watts)/(kW*1000*hr) = $/hr) 
 * ```sensor.01_total_cost```: Uses the integral integration to integrate (in the calculus sense) the ```cost_per_hour sensor```. This gives accumulation of cost.
 * ```number.01_session_cost_2```: Just the difference between the charger's ```total_cost``` and ```last_saved_total_cost``` to give the current session cost to display on the charger page (and record when charging is done)
 * I previously tried a [utility meter](https://www.home-assistant.io/integrations/utility_meter/) for session cost but got weird results, so switched to the simple model above.
