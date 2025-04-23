@@ -64,7 +64,9 @@ For this to be useful, your users' phones will all have to be able to connect to
 * [Browser Mod](https://github.com/thomasloven/hass-browser_mod)
 * [Integral](https://www.home-assistant.io/integrations/integration/)
 * [Custom Button-card](https://github.com/custom-cards/button-card?tab=readme-ov-file#installation)
-* 
+* (not sure this got used in final version) [Config-template-card](https://github.com/iantrich/config-template-card)
+* [Decluttering card](https://github.com/custom-cards/decluttering-card)
+* [Vertical Stack in Card](https://github.com/ofekashery/vertical-stack-in-card)
 
 We also use the integrations below, though they are not specific to the OpenEVSE project
 * [Mobile App](https://www.home-assistant.io/integrations/mobile_app/) (auto-enabled)
