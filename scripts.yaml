@@ -1,0 +1,1348 @@
+save_charge_event:
+  sequence:
+  - variables:
+      time: '{{ states(''sensor.date_time'') }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ eventtype == ''unplug'' }}'
+      sequence:
+      - alias: save charge event
+        action: notify.send_message
+        metadata: {}
+        data:
+          message: '{{ user_unit }},{{ time }},{{ ev_username }},{{ chargerid }},{{
+            eventtype }},{{ totalusage }},{{ totalcost }},{{ sessioncost }}'
+        target:
+          entity_id: notify.file
+    - conditions:
+      - condition: template
+        value_template: '{{ eventtype != ''unplug'' }}'
+      sequence:
+      - alias: save charge event
+        action: notify.send_message
+        metadata: {}
+        data:
+          message: '{{ user_unit }},{{ time }},{{ ev_username }},{{ chargerid }},{{
+            eventtype }},{{ totalusage }},{{ totalcost }},'
+        target:
+          entity_id: notify.file
+  fields:
+    ev_username:
+      selector:
+        text:
+      name: ev_username
+      description: user ID of the person initiating a charge
+      required: true
+    chargerid:
+      selector:
+        text:
+      name: chargerid
+      description: unique identifier of charger
+      required: true
+    eventtype:
+      selector:
+        text: {}
+      name: eventtype
+      description: Is this normal, override, eco, or end?
+      required: true
+    totalusage:
+      selector:
+        text: {}
+      name: totalusage
+      description: charger's total kWh delivered to date
+      required: true
+    sessioncost:
+      selector:
+        text:
+      name: sessioncost
+    totalcost:
+      selector:
+        text:
+      name: totalcost
+    user_unit:
+      selector:
+        text:
+      name: user_unit
+      description: 'unit # of user'
+      default: '00'
+  alias: Save Charge Event
+  description: ''
+clear_05_override:
+  sequence:
+  - action: openevse.clear_override
+    metadata: {}
+    data: {}
+    target:
+      device_id: 06349cc05e7646f5a2785e8b8e6903e3
+  alias: Clear 05 Override
+  description: ''
+  icon: mdi:battery-plus-variant
+turn_05_on_immediately:
+  sequence:
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: active
+      auto_release: true
+    target:
+      device_id: 06349cc05e7646f5a2785e8b8e6903e3
+  alias: Turn 05 on immediately
+  description: ''
+  icon: mdi:exclamation-thick
+turn_05_off_immediately_persist:
+  sequence:
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: 06349cc05e7646f5a2785e8b8e6903e3
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: nobody
+    target:
+      entity_id: input_text.user_05
+  alias: Turn 05 off immediately, persist
+  description: ''
+  icon: mdi:exclamation-thick
+eco_start_05:
+  sequence:
+  - wait_for_trigger:
+    - trigger: time
+      at: 09:00:00
+    continue_on_timeout: false
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: eco
+      totalusage: '{{ states(''sensor.openevse_fs_05_total_usage'') }}'
+  - action: script.clear_05_override
+    metadata: {}
+    data: {}
+  - repeat:
+      sequence:
+      - action: script.clear_05_override
+        metadata: {}
+        data: {}
+      while:
+      - condition: and
+        conditions:
+        - condition: template
+          value_template: '{{ repeat.index <= 10 }}'
+        - condition: state
+          entity_id: binary_sensor.openevse_fs_05_manual_override
+          state: 'on'
+  alias: eco_start_05
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+normal_start_05_old:
+  sequence:
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: normal
+      totalusage: '{{ states(''sensor.openevse_fs_05_total_usage'') }}'
+  - action: script.clear_05_override
+    metadata: {}
+    data: {}
+  - repeat:
+      sequence:
+      - action: script.clear_05_override
+        metadata: {}
+        data: {}
+      while:
+      - condition: and
+        conditions:
+        - condition: template
+          value_template: '{{ repeat.index <= 10 }}'
+        - condition: state
+          entity_id: binary_sensor.openevse_fs_05_manual_override
+          state: 'on'
+  alias: normal_start_05_old
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+end_05:
+  sequence:
+  - action: script.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - script.override_start_05
+      - script.eco_start_05
+      - script.normal_start_05
+      - script.normal_start_b_05
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: 06349cc05e7646f5a2785e8b8e6903e3
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '05'
+      eventtype: end
+      totalusage: '{{ states(''sensor.openevse_fs_05_total_usage'') }}'
+  - variables:
+      message: '{{ (user_name ~ '' done charging'') }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ message }}'
+    target:
+      entity_id: input_text.{{ charger_id }}_text
+  alias: end_05
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: false
+      default: 'null'
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+override_start_05:
+  sequence:
+  - variables:
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      charger_device_id: '{{ device_id(charger_entity_id) }}'
+      message: '{{ (user_name ~ '' override charging'') }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ message }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  - action: script.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - script.eco_start_{{ charger_id }}
+      - script.normal_start_{{ charger_id }}
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: override
+      totalusage: '{{ start_usage }}'
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: active
+      auto_release: true
+    target:
+      device_id: '{{ charger_device_id }}'
+  - repeat:
+      sequence:
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay: 00:00:05
+      while:
+      - condition: template
+        value_template: '{{ is_state(charger_status_sensor_entity_id,''disabled'')
+          }}'
+      - condition: template
+        value_template: '{{ repeat.index <= 10 }}'
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - repeat:
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      while:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ states(charger_rate_sensor_entity_id) | float > 1 }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unavailable'')
+            }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unknown'')
+            }}'
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: '{{ charger_device_id }}'
+  - variables:
+      end_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      message: '{{ (user_name ~ '' charge complete'') }}'
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: end
+      totalusage: '{{ end_usage }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ user_name }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  alias: override_start_05
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+normal_start_05:
+  sequence:
+  - variables:
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      charger_connected_sensor_entity_id: binary_sensor.openevse_fs_{{ charger_id
+        }}_vehicle_connected
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      charger_device_id: '{{ device_id(charger_entity_id) }}'
+      user_message: '{{ user_name }} normal charge'
+      user_message_t: '{{ user_name ~ ''is charging'' }}'
+  - action: script.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - script.eco_start_{{ charger_id }}
+      - script.override_start_{{ charger_id }}
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ user_message }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: normal
+      totalusage: '{{ start_usage }}'
+  - choose:
+    - conditions:
+      - condition: time
+        after: '15:59:00'
+        before: '21:01:00'
+      sequence:
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+  - action: openevse.clear_override
+    metadata: {}
+    target:
+      device_id: '{{ charger_device_id }}'
+  - repeat:
+      sequence:
+      - action: openevse.clear_override
+        metadata: {}
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay: 00:00:05
+      while:
+      - condition: template
+        value_template: '{{ is_state(charger_status_sensor_entity_id,''disabled'')
+          }}'
+      - condition: template
+        value_template: '{{ repeat.index <= 10 }}'
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - repeat:
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      while:
+      - condition: not
+        conditions:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ states(charger_rate_sensor_entity_id) | float > 1 }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unavailable'')
+            }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unknown'')
+            }}'
+        - condition: time
+          after: '15:59:00'
+          before: '21:01:00'
+          weekday:
+          - sat
+          - fri
+          - thu
+          - wed
+          - tue
+          - mon
+          - sun
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: '{{ charger_device_id }}'
+  - variables:
+      end_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      end_message: '{{ user_name }} charge ended'
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: end
+      totalusage: '{{ end_usage }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ end_message }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  alias: normal_start_05
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+05_charge_session:
+  sequence:
+  - variables:
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      charger_connected_sensor_entity_id: binary_sensor.openevse_fs_{{ charger_id
+        }}_vehicle_connected
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      charger_device_id: '{{ device_id(charger_entity_id) }}'
+      user_message: '{{ user_name }} charging'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ user_message }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: '{{ charge_type }}'
+      totalusage: '{{ start_usage }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '"{{ charge_type == ''eco'' }}"   '
+      sequence:
+      - wait_template: '{{ is_state(''eco_charge_time'', ''on'') }}'
+  - choose:
+    - conditions:
+      - condition: time
+        after: '15:59:00'
+        before: '21:01:00'
+      sequence:
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '"{{ charge_type == ''eco''  }}"'
+        - condition: template
+          value_template: '{{ charge_type == ''normal''  }}'
+      sequence:
+      - action: openevse.clear_override
+        metadata: {}
+        target:
+          device_id: '{{ charger_device_id }}'
+      - repeat:
+          sequence:
+          - action: openevse.clear_override
+            metadata: {}
+            target:
+              device_id: '{{ charger_device_id }}'
+          - delay: 00:00:05
+          while:
+          - condition: template
+            value_template: '{{ is_state(charger_status_sensor_entity_id,''disabled'')
+              }}'
+          - condition: template
+            value_template: '{{ repeat.index <= 10 }}'
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - repeat:
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      while:
+      - condition: not
+        conditions:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ states(charger_rate_sensor_entity_id) | float > 1 }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unavailable'')
+            }}'
+        - condition: template
+          value_template: '{{ is_state(charger_status_sensor_entity_id,''unknown'')
+            }}'
+        - condition: time
+          after: '15:59:00'
+          before: '21:01:00'
+          weekday:
+          - sat
+          - fri
+          - thu
+          - wed
+          - tue
+          - mon
+          - sun
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: '{{ charger_device_id }}'
+  - variables:
+      end_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      end_message: '{{ user_name }} charge ended'
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: end
+      totalusage: '{{ end_usage }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ end_message }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_text
+  alias: 05_charge_session
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+    charge_type:
+      selector:
+        text:
+      name: charge_type
+      description: normal, override, eco
+      required: true
+end_charge:
+  sequence:
+  - variables:
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_charge_type_helper: input_text.{{ charger_id }}_charge_type
+      charger_user_name_helper: input_text.{{ charger_id }}_user_name
+      charger_last_saved_total_cost_helper: input_number.{{ charger_id }}_last_saved_total_cost
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      charger_connected_sensor_entity_id: binary_sensor.openevse_fs_{{ charger_id
+        }}_vehicle_connected
+      charger_device_id: '{{ device_id(charger_status_sensor_entity_id) }}'
+      end_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+      session_cost: '{{ states(''number.'' ~ charger_id ~ ''_session_cost_2'') }}'
+      user_entity_name: person.{{ user_name | replace('-','_') }}
+      user_unit: '{{ labels(user_entity_name).0  }}'
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: '{{ event_type }}'
+      totalusage: '{{ end_usage }}'
+      totalcost: '{{ total_cost }}'
+      sessioncost: '{{ session_cost }}'
+      user_unit: '{{ user_unit }}'
+  - action: openevse.set_override
+    metadata: {}
+    data:
+      state: disabled
+      auto_release: false
+    target:
+      device_id: '{{ charger_device_id }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(charger_connected_sensor_entity_id, ''on'') }}'
+      sequence:
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: charge complete
+        target:
+          entity_id: '{{ charger_charge_type_helper }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(charger_connected_sensor_entity_id, ''off'')
+          }}'
+      sequence:
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: available
+        target:
+          entity_id: '{{ charger_charge_type_helper }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: ' '
+        target:
+          entity_id: '{{ charger_user_name_helper }}'
+      - action: input_number.set_value
+        metadata: {}
+        data:
+          value: '{{ total_cost }}'
+        target:
+          entity_id: '{{ charger_last_saved_total_cost_helper }}'
+        enabled: false
+  alias: end_charge
+  description: ''
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+    event_type:
+      selector:
+        text:
+      name: event_type
+      required: true
+  mode: queued
+start_charge:
+  sequence:
+  - variables:
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      charger_connected_sensor_entity_id: binary_sensor.openevse_fs_{{ charger_id
+        }}_vehicle_connected
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      start_total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+      charger_device_id: '{{ device_id(charger_status_sensor_entity_id) }}'
+      user_message: '{{ user_name }} normal charge'
+      user_message_t: '{{ user_name ~ ''is charging'' }}'
+      charge_type_helper: '{{''input_text.'' ~ charger_id ~ ''_charge_type'' }}'
+      user_entity_name: person.{{ user_name | replace('-','_') }}
+      user_unit: '{{ labels(user_entity_name).0  }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ user_name }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_user_name
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ charge_type }}'
+    target:
+      entity_id: '{{ charge_type_helper }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''eco'' }}'
+      - condition: template
+        value_template: '{{ is_state(''binary_sensor.eco_charge_time'',''off'') }}'
+      sequence:
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: disabled
+          auto_release: false
+        target:
+          device_id: '{{ charger_device_id }}'
+      - repeat:
+          sequence:
+          - delay: 00:00:05
+          while:
+          - condition: template
+            value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+              }}'
+          - condition: template
+            value_template: '{{ repeat.index <= 6 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no_car
+      - condition: template
+        value_template: '{{ is_state(charge_type_helper, ''eco'') }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: eco waiting
+        target:
+          entity_id: '{{ charge_type_helper }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''eco'' }}'
+      - condition: template
+        value_template: '{{ is_state(''binary_sensor.eco_charge_time'',''on'') }}'
+      sequence:
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: normal
+        target:
+          entity_id: '{{ charge_type_helper }}'
+  - variables:
+      charge_type2: '{{ states(charge_type_helper) }}'
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ charge_type2 == ''normal'' }}'
+        - condition: template
+          value_template: '{{ charge_type == ''normal'' }}'
+      sequence:
+      - action: script.save_charge_event
+        metadata: {}
+        data:
+          ev_username: '{{ user_name }}'
+          chargerid: '{{ charger_id }}'
+          eventtype: '{{ charge_type }}'
+          totalusage: '{{ start_usage }}'
+          totalcost: '{{ start_total_cost }}'
+          user_unit: '{{ user_unit }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: '{{ charge_type }}'
+        target:
+          entity_id: '{{ charge_type_helper }}'
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ is_state(''binary_sensor.peak_charge_time'', ''on'')
+              }}'
+          sequence:
+          - action: openevse.set_override
+            metadata: {}
+            data:
+              state: active
+              auto_release: true
+            target:
+              device_id: '{{ charger_device_id }}'
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 1
+              milliseconds: 0
+      - action: openevse.clear_override
+        metadata: {}
+        target:
+          device_id: '{{ charger_device_id }}'
+      - repeat:
+          sequence:
+          - action: openevse.clear_override
+            metadata: {}
+            target:
+              device_id: '{{ charger_device_id }}'
+          - delay: 00:00:05
+          while:
+          - condition: template
+            value_template: '{{ is_state(charger_status_sensor_entity_id,''disabled'')
+              }}'
+          - condition: template
+            value_template: '{{ repeat.index <= 10 }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - alias: check for car; if none end charge
+        if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no_car
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''override'' }}'
+      sequence:
+      - action: script.save_charge_event
+        metadata: {}
+        data:
+          ev_username: '{{ user_name }}'
+          chargerid: '{{ charger_id }}'
+          eventtype: '{{ charge_type }}'
+          totalusage: '{{ start_usage }}'
+          totalcost: '{{ start_total_cost }}'
+          user_unit: '{{ user_unit }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: '{{ charge_type }}'
+        target:
+          entity_id: '{{ charge_type_helper }}'
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - alias: check for car; if none end charge
+        if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no car
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''stop'' }}      '
+      sequence:
+      - action: script.end_charge
+        metadata: {}
+        data:
+          user_name: '{{ user_name }}'
+          charger_id: '{{ charger_id }}'
+          event_type: stop button
+  alias: start_charge
+  description: for charge type normal, override, or eco, logs start and sets charger
+    and helpers to appropriate settings
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charger_id:
+      selector:
+        text:
+      name: charger_id
+      required: true
+    charge_type:
+      selector:
+        text:
+      name: charge_type
+      required: true
+  mode: queued
+check_dir:
+  sequence:
+  - action: shell_command.get_pwd
+    metadata: {}
+    response_variable: dirname
+    data: {}
+  - action: notify.mobile_app_sm_s901u
+    metadata: {}
+    data:
+      message: got {{ dirname.stdout }}
+  alias: check_dir
+  description: ''
+start_charge_duplicate:
+  sequence:
+  - action: shell_command.get_pwd
+    data: {}
+    response_variable: var_charger_name
+  - variables:
+      charger_id: '{{ var_charger_name.stdout }}'
+      charger_entity_id: openevse_fs_{{ charger_id }}
+      charger_status_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_status
+      charger_rate_sensor_entity_id: sensor.openevse_fs_{{ charger_id }}_charging_current
+      charger_connected_sensor_entity_id: binary_sensor.openevse_fs_{{ charger_id
+        }}_vehicle_connected
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      start_total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+      charger_device_id: '{{ device_id(charger_status_sensor_entity_id) }}'
+      user_message: '{{ user_name }} normal charge'
+      user_message_t: '{{ user_name ~ ''is charging'' }}'
+      charge_type_helper: '{{''input_text.'' ~ charger_id ~ ''_charge_type'' }}'
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ user_name }}'
+    target:
+      entity_id:
+      - input_text.{{ charger_id }}_user_name
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: '{{ charge_type }}'
+    target:
+      entity_id: '{{ charge_type_helper }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''eco'' }}'
+      - condition: template
+        value_template: '{{ is_state(''binary_sensor.eco_charge_time'',''off'') }}'
+      sequence:
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: disabled
+          auto_release: false
+        target:
+          device_id: '{{ charger_device_id }}'
+      - repeat:
+          sequence:
+          - delay: 00:00:05
+          while:
+          - condition: template
+            value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+              }}'
+          - condition: template
+            value_template: '{{ repeat.index <= 6 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no_car
+      - condition: template
+        value_template: '{{ is_state(charge_type_helper, ''eco'') }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: eco waiting
+        target:
+          entity_id: '{{ charge_type_helper }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''eco'' }}'
+      - condition: template
+        value_template: '{{ is_state(''binary_sensor.eco_charge_time'',''on'') }}'
+      sequence:
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: normal
+        target:
+          entity_id: '{{ charge_type_helper }}'
+  - variables:
+      charge_type2: '{{ states(charge_type_helper) }}'
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ charge_type2 == ''normal'' }}'
+        - condition: template
+          value_template: '{{ charge_type == ''normal'' }}'
+      sequence:
+      - action: script.save_charge_event
+        metadata: {}
+        data:
+          ev_username: '{{ user_name }}'
+          chargerid: '{{ charger_id }}'
+          eventtype: '{{ charge_type }}'
+          totalusage: '{{ start_usage }}'
+          totalcost: '{{ start_total_cost }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: '{{ charge_type }}'
+        target:
+          entity_id: '{{ charge_type_helper }}'
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ is_state(''binary_sensor.peak_charge_time'', ''on'')
+              }}'
+          sequence:
+          - action: openevse.set_override
+            metadata: {}
+            data:
+              state: active
+              auto_release: true
+            target:
+              device_id: '{{ charger_device_id }}'
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 1
+              milliseconds: 0
+      - action: openevse.clear_override
+        metadata: {}
+        target:
+          device_id: '{{ charger_device_id }}'
+      - repeat:
+          sequence:
+          - action: openevse.clear_override
+            metadata: {}
+            target:
+              device_id: '{{ charger_device_id }}'
+          - delay: 00:00:05
+          while:
+          - condition: template
+            value_template: '{{ is_state(charger_status_sensor_entity_id,''disabled'')
+              }}'
+          - condition: template
+            value_template: '{{ repeat.index <= 10 }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - alias: check for car; if none end charge
+        if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no_car
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''override'' }}'
+      sequence:
+      - action: script.save_charge_event
+        metadata: {}
+        data:
+          ev_username: '{{ user_name }}'
+          chargerid: '{{ charger_id }}'
+          eventtype: '{{ charge_type }}'
+          totalusage: '{{ start_usage }}'
+          totalcost: '{{ start_total_cost }}'
+      - action: input_text.set_value
+        metadata: {}
+        data:
+          value: '{{ charge_type }}'
+        target:
+          entity_id: '{{ charge_type_helper }}'
+      - action: openevse.set_override
+        metadata: {}
+        data:
+          state: active
+          auto_release: true
+        target:
+          device_id: '{{ charger_device_id }}'
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - alias: check for car; if none end charge
+        if:
+        - condition: template
+          value_template: '{{ is_state(charger_connected_sensor_entity_id,''off'')
+            }}'
+        then:
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: no car? Try again
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+        - action: input_text.set_value
+          metadata: {}
+          data:
+            value: available
+          target:
+            entity_id: '{{ charge_type_helper }}'
+        - action: script.end_charge
+          metadata: {}
+          data:
+            user_name: '{{ user_name }}'
+            charger_id: '{{ charger_id }}'
+            event_type: no car
+    - conditions:
+      - condition: template
+        value_template: '{{ charge_type == ''stop'' }}      '
+      sequence:
+      - action: script.end_charge
+        metadata: {}
+        data:
+          user_name: '{{ user_name }}'
+          charger_id: '{{ charger_id }}'
+          event_type: stop button
+  alias: start_charge (Duplicate)
+  description: for charge type normal, override, or eco, logs start and sets charger
+    and helpers to appropriate settings
+  fields:
+    user_name:
+      selector:
+        text:
+      name: user_name
+      required: true
+    charge_type:
+      selector:
+        text:
+      name: charge_type
+      required: true
+  mode: queued

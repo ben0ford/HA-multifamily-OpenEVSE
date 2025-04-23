@@ -1,0 +1,52 @@
+  # The decluttering template for the main entry dashboard view
+  # (lovely to be able to use comments!)
+  # The only difference between this template and the admin one are
+  # action:
+  # navigation_path:
+
+  start_page_template:
+    card:
+      type: custom:button-card
+      name: FS-[[var_charger_number]]
+      entity: input_text.[[var_charger_number]]_charge_type
+      tap_action:
+        action: |
+          [[[ 
+            if (entity.state === 'unavailable')
+              return 'null';
+            else
+              return 'navigate';
+          ]]]
+        navigation_path: /fs-[[var_charger_number]]/0
+      show_name: '[[var_true_false]]'
+      show_icon: '[[var_true_false]]'
+      show_label: false
+      show_state: false
+      color_type: card
+      state:
+        - value: available
+          color: lightgreen
+          icon: mdi:ev-station
+        - value: normal
+          color: lightblue
+          icon: mdi:battery-charging-10
+        - value: override
+          color: lightblue
+          icon: mdi:battery-charging-10
+        - value: eco
+          color: lightblue
+          icon: mdi:battery-charging-10
+        - value: eco waiting
+          color: lightblue
+          icon: mdi:battery-charging-10
+        - value: charge complete
+          color: lightblue
+          icon: mdi:sleep
+        - value: stop
+          color: '#880000'
+        - value: unavailable
+          color: red
+          icon: mdi:alert-octagon
+      styles:
+        card:
+          - height: 50px

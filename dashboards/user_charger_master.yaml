@@ -1,0 +1,175 @@
+# This master dashboard file can be used for any/all of our chargers, as it does
+# not contain any charger-specific strings or information.
+#
+# Used for contents of an individual non-admin charger page
+#
+# loaded as "views: !include dashboards/user_charger_master.yaml" in dashboards fs-01.yaml, fs-02.yaml, etc
+
+  - title: Back
+    type: sections
+    max_columns: 4
+    subview: true
+    back_path: /lovelace/0
+    sections:
+      - type: grid
+        cards:
+          - type: custom:decluttering-card
+            template: charger_header
+            style:
+              text-align: center
+              font-size: 25px
+          - type: custom:mod-card
+            grid_options:
+              columns: 6
+              rows: 7
+            style: |
+              ha-card {
+                background-color: rgb(150,150,150,0.3);
+              }
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:button-card
+                  name: Actions
+                  show_name: true
+                  styles:
+                    card:
+                      - font-size: 24px
+                      - background-color: transparent
+                      - padding-top: 10px
+                      - padding-bottom: 8px
+                      - border: none
+                - type: custom:decluttering-card
+                  template: charger_start_stop_template
+                  variables:
+                    - var_charge_type: normal
+                    - var_name: Normal charge
+                    - var_label: (no charge 4-9 pm)
+                    - var_color: lightblue
+                    - var_true_or_false: true
+                    - var_number_value: 5
+                - type: custom:decluttering-card
+                  template: charger_start_stop_template
+                  variables:
+                    - var_charge_type: eco
+                    - var_name: Eco charge
+                    - var_label: (charge at 9 am)
+                    - var_color: lightgreen
+                    - var_true_or_false: true
+                    - var_number_value: 10
+                - type: custom:decluttering-card
+                  template: charger_override_template
+                  variables:
+                    - var_charge_type: override
+                    - var_name: Override charge
+                    - var_label: (charge 24/7)
+                    - var_color: pink
+                    - var_true_or_false: true
+                    - var_number_value: 15
+                - type: custom:decluttering-card
+                  template: charger_stop_template
+                  variables:
+                    - var_charge_type: stop
+                    - var_name: Stop charging
+                    - var_label: (stop current session)
+                    - var_color: red
+                    - var_true_or_false: false
+                    - var_number_value: 20
+          - type: custom:vertical-stack-in-card
+            grid_options:
+              columns: 6
+              rows: 7
+            card_mod:
+              style: |
+                ha-card {
+                  background: rgb(150,150,150,0.3);
+                }
+            cards:
+              - type: custom:button-card
+                name: Status
+                show_name: true
+                styles:
+                  card:
+                    - font-size: 24px
+                    - background-color: transparent
+                    - padding-top: 10px
+                    - padding-bottom: 3px
+              - type: custom:decluttering-card
+                template: charger_status_status_card
+                variables:
+                  - var_name: Charging Status
+                  - var_icon: mdi:account
+                color_type: card
+              - type: custom:decluttering-card
+                template: charger_status_user_card
+                variables:
+                  - var_name: Identifying user
+                  - var_icon: mdi:account
+              - type: custom:decluttering-card
+                template: charger_status_other_card
+                variables:
+                  - var_name: Charging time
+                  - var_icon: mdi:clock
+                  - var_sensor: charge_time_elapsed
+                  - var_binary: ''
+                color_type: card
+                icon: mdi:clock
+              - type: custom:decluttering-card
+                template: charger_status_other_card
+                variables:
+                  - var_name: Charging connection
+                  - var_icon: null
+                  - var_sensor: vehicle_connected
+                  - var_binary: binary_
+                color_type: card
+              - type: custom:decluttering-card
+                template: charger_status_other_card
+                variables:
+                  - var_name: Charging current
+                  - var_icon: null
+                  - var_sensor: charging_current
+                  - var_binary: ''
+                color_type: card
+              - type: custom:decluttering-card
+                template: charger_status_other_card
+                variables:
+                  - var_name: Usage this session
+                  - var_icon: null
+                  - var_sensor: usage_this_session
+                  - var_binary: ''
+                color_type: card
+              - type: custom:button-card
+                entity: sensor.electricity_rate
+                layout: icon_state
+                show_state: true
+                show_name: false
+                show_icon: true
+                show_label: false
+                name: PGE rate
+                card_size: 1
+#                aspect_ratio: 4/1
+                icon: mdi:meter-electric
+                styles:
+                  card:
+                    - background-color: transparent
+              - type: custom:decluttering-card
+                template: charger_status_cost_card
+                name: Session cost
+                card_size: 1
+#                aspect_ratio: 4/1
+                variables:
+                  - var_icon: mdi:currency-usd
+                  - var_name: Session cost
+                styles:
+                  card:
+                    - background-color: transparent
+      - type: grid
+        grid_options:
+          columns: 1
+          rows: 3
+        cards:
+          - type: custom:decluttering-card
+            template: charger_addl_info_card
+            styles:
+              name:
+                - white-space: normal

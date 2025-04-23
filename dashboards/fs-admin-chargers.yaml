@@ -1,0 +1,227 @@
+title: Admin Tools
+# This view should only be seen by the ev-support team
+visible:
+  - user: 709933e385314875ade8311c454be206 # FS-network
+  - user: 2b9cbab18de341e38ffbd6b2e761ba63 # Ben
+  - user: 75e34581dbcb4c6d8719447c2c133d8b # Hugh
+  - user: d153a62807b74a2cb7c0d475fecb2eca # Richard
+sections:
+  - type: grid
+    cards:
+      - type: custom:button-card
+        styles:
+          grid:
+            - position: relative
+            - grid-template-areas: '"i n "'
+            - grid-template-columns: 25% 50% 10%
+          card:
+            - font-size: 20px
+            - background-color: rgb(300,0,0,.3)
+            - box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.66)
+            - padding: 7px
+        name: Charger Admin
+        show_name: true
+        alignment: center
+        show_entity_picture: true
+        entity_picture: /local/green-frog.png
+        size: 60px
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '01'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '02'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: 02a
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '03'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '04'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '05'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '06'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: 06a
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '07'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '08'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: 08a
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '09'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '10'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '11'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '12'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: 12a
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '13'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '14'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '15'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '16'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '17'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: 17a
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '18'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '19'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1
+      - type: custom:decluttering-card
+        template: admin_start_page_template
+        variables:
+          - var_charger_number: '20'
+          - var_true_false: 'true'
+        grid_options:
+          columns: 3
+          rows: 1

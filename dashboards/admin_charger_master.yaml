@@ -1,0 +1,460 @@
+
+  - title: Admin
+    type: sections
+    max_columns: 4
+    subview: true
+    back_path: /lovelace/1
+    path: admin
+    icon: ''
+    visible:
+      - user: XXX
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Disable/Enable charger
+          - type: custom:button-card
+            variables:
+              charger_id: |
+                [[[ 
+                  let a = window.location.href;
+                  let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+                  let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+                  let result = folder.replace("admin-","");
+                  return result;
+                ]]]
+            entity: '[[[ return `input_text.${variables.charger_id}_charge_type` ]]]'
+            icon: mdi:cancel
+            size: 50px
+            show_name: true
+            styles:
+              card:
+                - background-color: rgb(0,200,0,.3)
+            state:
+              - value: unavailable
+                icon: mdi:restart
+                color: blue
+                styles:
+                  card:
+                    - background-color: rgb(200,0,0,.3)
+            name: |
+              [[[
+                if (entity.state === 'unavailable')
+                  return "Turn charger access back on";
+                else
+                  return "Disable charger buttons";
+              ]]]
+            tap_action:
+              action: call-service
+              service: input_text.set_value
+              data:
+                value: |
+                  [[[
+                    if (entity.state === 'unavailable')
+                      return "available";
+                    else
+                      return "unavailable";
+                  ]]]
+              target:
+                entity_id: '[[[ return `input_text.${variables.charger_id}_charge_type` ]]]'
+      - type: grid
+        cards:
+          - type: custom:button-card
+            name: |
+              [[[ 
+                let a = window.location.href;
+                let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+                let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+                let result = folder.replace("admin-","");
+                return 'FS-' + result + ' sensors and other entities';
+              ]]]
+            icon: mdi:ev-station
+            size: 50px
+          - type: custom:button-card
+            variables:
+              charger_id: |
+                [[[ 
+                  let a = window.location.href;
+                  let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+                  let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+                  let result = folder.replace("admin-","");
+                  return result;
+                ]]]
+            styles:
+              grid:
+                - grid-template-areas: '"s" "n"'
+            custom_fields:
+              entities:
+                card:
+                  type: custom:vertical-stack-in-card
+                  cards:
+                    - type: entities
+                      entities:
+                        - entity: '[[[ return `input_text.${variables.charger_id}_user_name` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`input_text.${variables.charger_id}_user_name`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }                          
+                        - entity: '[[[ return `input_text.${variables.charger_id}_charge_type` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`input_text.${variables.charger_id}_charge_type`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }                          
+                        - entity: '[[[ return `binary_sensor.openevse_fs_${variables.charger_id}_vehicle_connected` ]]]'
+                          name: Vehicle connected?
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - type: section
+                          label: Cost info
+                        - entity: '[[[ return `sensor.${variables.charger_id}_cost_per_hour` ]]]'
+                          name: Cost per Hour
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                        - entity: '[[[ return `number.${variables.charger_id}_session_cost_2` ]]]'
+                          name: Session cost_2
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                                :host {
+                                  --text-field-padding: 5px;
+                                  --text-field-suffix-padding-left: 0px;
+                                  --text-field-suffix-padding-right: 12px;
+                                }
+                                ha-textfield $: |
+                                input {
+                                  width: 80px !important;
+                                }
+                                .mdc-text-field {
+                                  height: 30px !important;
+                                }
+                        - entity: '[[[ return `sensor.${variables.charger_id}_total_cost` ]]]'
+                          name: Charger total cost
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `input_number.${variables.charger_id}_last_saved_total_cost` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`input_number.${variables.charger_id}_last_saved_total_cost`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                                :host {
+                                  --text-field-padding: 0px;
+                                  --text-field-suffix-padding-left: 0px;
+                                  --text-field-suffix-padding-right: 12px;
+                                }
+                                ha-textfield $: |
+                                input {
+                                  width: 60px !important;
+                                }
+                                .mdc-text-field {
+                                  height: 30px !important;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_usage_this_session` ]]]'
+                          name: kWh usage this session
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: sensor.electricity_rate
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `input_number.fs_${variables.charger_id}_which_button` ]]]'
+                          name: 'More info button #'
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                                :host {
+                                  --text-field-padding: 0px;
+                                  --text-field-suffix-padding-left: 0px;
+                                  --text-field-suffix-padding-right: 12px;
+                                }
+                                ha-textfield $: |
+                                input {
+                                  width: 80px !important;
+                                }
+                                .mdc-text-field {
+                                  height: 30px !important;
+                                }                                
+                        - type: section
+                          label: |+
+                            (5–Normal 10–Eco
+                            15–Override 20–Stop)
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                .text-content {
+                                  font-size: 10px;
+                                }
+                                .divider {
+                                  background-color: transparent !important;
+                                  margin-top: 20px !important;
+                                }                                
+                        - type: divider
+                          style:
+                            background-color: transparent
+                            height: 32px
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_charge_time_elapsed` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_charge_time_elapsed`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_charging_current` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_charging_current`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_charging_status` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_charging_status`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_charging_voltage` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_charging_voltage`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `button.openevse_fs_${variables.charger_id}_restart_evse` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`button.openevse_fs_${variables.charger_id}_restart_evse`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_station_status` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_station_status`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                        - entity: '[[[ return `binary_sensor.openevse_fs_${variables.charger_id}_manual_override` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`binary_sensor.openevse_fs_${variables.charger_id}_manual_override`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                        - entity: '[[[ return `select.openevse_fs_${variables.charger_id}_override_state` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`select.openevse_fs_${variables.charger_id}_override_state`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_total_usage` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_total_usage`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }                                
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_wifi_signal_strength` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_wifi_signal_strength`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                        - entity: '[[[ return `sensor.openevse_fs_${variables.charger_id}_ambient_temperature` ]]]'
+                          name: |
+                            [[[
+                              let sensorstate = states[`sensor.openevse_fs_${variables.charger_id}_ambient_temperature`];
+                              return sensorstate.attributes['friendly_name'].replace(/.*?\s/, "");
+                            ]]]
+                          card_mod:
+                            style:
+                              hui-generic-entity-row$: |
+                                state-badge {
+                                  display: none !important;
+                                }
+                                .text-content {
+                                  text-align: left;
+                                }
+                  card_mod:
+                    style: |
+                      ha-card {
+                        width: 100%;
+                        padding: 0px;
+                      }
+            card_mod:
+              style: |
+                ha-card {
+                  width: 100% !important;
+                }
+          - type: custom:button-card
+            variables:
+              charger_id: |
+                [[[ 
+                  let a = window.location.href;
+                  let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+                  let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+                  let result = folder.replace("admin-","");
+                  return result;
+                ]]]
+              usr: !secret fs_admin_usr
+              pwd: !secret fs_wifi_pwd
+            entity: sensor.openevse_fs_01_station_status
+            name: open charger web page
+            label: '[[[ return `user ${variables.usr}, password ${variables.pwd}` ]]]'
+            show_label: true
+            size: 50px
+            tap_action:
+              action: url
+              url_path: '[[[ return `http://fs-${variables.charger_id}.fs` ]]]'
+

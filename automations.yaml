@@ -1,0 +1,529 @@
+- id: '1740281852297'
+  alias: end_charge_no_current
+  description: listens for any charger switching status from charging for 10 seconds,
+    logs and turns off if not expected no-charge time
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.openevse_fs_01_charging_status
+    - sensor.openevse_fs_02_charging_status
+    - sensor.openevse_fs_02a_charging_status
+    - sensor.openevse_fs_03_charging_status
+    - sensor.openevse_fs_04_charging_status
+    - sensor.openevse_fs_05_charging_status
+    - sensor.openevse_fs_06_charging_status
+    - sensor.openevse_fs_06a_charging_status
+    - sensor.openevse_fs_07_charging_status
+    - sensor.openevse_fs_08_charging_status
+    - sensor.openevse_fs_08a_charging_status
+    - sensor.openevse_fs_09_charging_status
+    - sensor.openevse_fs_10_charging_status
+    - sensor.openevse_fs_11_charging_status
+    - sensor.openevse_fs_12_charging_status
+    - sensor.openevse_fs_12a_charging_status
+    - sensor.openevse_fs_13_charging_status
+    - sensor.openevse_fs_14_charging_status
+    - sensor.openevse_fs_15_charging_status
+    - sensor.openevse_fs_16_charging_status
+    - sensor.openevse_fs_17_charging_status
+    - sensor.openevse_fs_17a_charging_status
+    - sensor.openevse_fs_18_charging_status
+    - sensor.openevse_fs_19_charging_status
+    - sensor.openevse_fs_20_charging_status
+    from: charging
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  actions:
+  - variables:
+      charger_id: '{{ trigger.entity_id | replace(''sensor.openevse_fs_'','''') |
+        replace(''_charging_status'','''') }}'
+      end_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      charge_type_text: '{{ states(''input_text.'' ~ charger_id ~ ''_charge_type'')
+        }}'
+      charge_type_helper: input_text.{{ charger_id }}_charge_type
+      user_name: '{{ states(''input_text.'' ~ charger_id ~ ''_user_name'') }}'
+      total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+      user_entity_name: person.{{ user_name | replace('-','_') }}
+      user_unit: '{{ labels(user_entity_name).0  }}'
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: template
+          value_template: '{{ charge_type_text == ''override'' }}'
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: '{{ is_state(''binary_sensor.peak_charge_time'', ''off'')
+              }}'
+          - condition: template
+            value_template: '{{ charge_type_text == ''normal'' or charge_type_text
+              == ''eco''}}'
+      sequence:
+      - action: script.save_charge_event
+        alias: launch save charge script, do not shut off charger
+        metadata: {}
+        data:
+          ev_username: '{{ user_name }}'
+          chargerid: '{{ charger_id }}'
+          eventtype: no_current
+          totalusage: '{{ end_usage }}'
+          totalcost: '{{ total_cost }}'
+          user_unit: '{{ user_unit }}'
+      - action: input_text.set_value
+        alias: switch charger status to complete
+        metadata: {}
+        data:
+          value: charge complete
+        target:
+          entity_id: '{{ charge_type_helper }}'
+  mode: queued
+- id: '1740333846422'
+  alias: end_charge_unplug
+  description: listens for any charger switching status from plugged in to unplugged,
+    runs end charge script
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.openevse_fs_01_vehicle_connected
+    - binary_sensor.openevse_fs_02_vehicle_connected
+    - binary_sensor.openevse_fs_02a_vehicle_connected
+    - binary_sensor.openevse_fs_03_vehicle_connected
+    - binary_sensor.openevse_fs_04_vehicle_connected
+    - binary_sensor.openevse_fs_05_vehicle_connected
+    - binary_sensor.openevse_fs_06_vehicle_connected
+    - binary_sensor.openevse_fs_06a_vehicle_connected
+    - binary_sensor.openevse_fs_07_vehicle_connected
+    - binary_sensor.openevse_fs_08_vehicle_connected
+    - binary_sensor.openevse_fs_08a_vehicle_connected
+    - binary_sensor.openevse_fs_09_vehicle_connected
+    - binary_sensor.openevse_fs_10_vehicle_connected
+    - binary_sensor.openevse_fs_11_vehicle_connected
+    - binary_sensor.openevse_fs_12_vehicle_connected
+    - binary_sensor.openevse_fs_12a_vehicle_connected
+    - binary_sensor.openevse_fs_13_vehicle_connected
+    - binary_sensor.openevse_fs_14_vehicle_connected
+    - binary_sensor.openevse_fs_15_vehicle_connected
+    - binary_sensor.openevse_fs_16_vehicle_connected
+    - binary_sensor.openevse_fs_17_vehicle_connected
+    - binary_sensor.openevse_fs_17a_vehicle_connected
+    - binary_sensor.openevse_fs_18_vehicle_connected
+    - binary_sensor.openevse_fs_19_vehicle_connected
+    - binary_sensor.openevse_fs_20_vehicle_connected
+    to: 'off'
+  conditions: []
+  actions:
+  - variables:
+      charger_id: '{{ trigger.entity_id | replace(''binary_sensor.openevse_fs_'','''')
+        | replace(''_vehicle_connected'','''') }}'
+      charge_type_text: '{{ states(''input_text.'' ~ charger_id ~ ''_charge_type'')
+        }}'
+      charge_type_helper: input_text.{{ charger_id }}_charge_type
+      user_name_text: '{{ states(''input_text.'' ~ charger_id ~ ''_user_name'') }}'
+      charger_total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+  - action: script.end_charge
+    alias: launch end charge script
+    metadata: {}
+    data:
+      user_name: '{{ user_name_text }}'
+      charger_id: '{{ charger_id }}'
+      event_type: unplug
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 6
+      milliseconds: 0
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: '{{ charger_total_cost }}'
+    target:
+      entity_id: input_number.{{ charger_id }}_last_saved_total_cost
+  mode: queued
+- id: '1740881328530'
+  alias: eco_9am_start
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:00:15
+  conditions: []
+  actions:
+  - repeat:
+      sequence:
+      - variables:
+          charger_id: '{{ repeat.item }}'
+          start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+            }}'
+          charge_type_text: '{{ states(''input_text.'' ~ charger_id ~ ''_charge_type'')
+            }}'
+          username: '{{ states(''input_text.'' ~ charger_id ~ ''_user_name'') }}'
+      - condition: template
+        value_template: '{{ charge_type_text == ''eco waiting'' }}'
+      - action: script.start_charge
+        metadata: {}
+        data:
+          user_name: '{{ username }}'
+          charger_id: '{{ charger_id }}'
+          charge_type: eco
+        target:
+          entity_id: script.start_charge
+      for_each:
+      - '01'
+      - '02'
+      - 02a
+      - '03'
+      - '04'
+      - '05'
+      - '06'
+      - 06a
+      - '07'
+      - 08a
+      - 09
+      - '10'
+      - '11'
+      - '12'
+      - 12a
+      - '13'
+      - '14'
+      - '15'
+      - '16'
+      - '17'
+      - 17a
+      - '18'
+      - '19'
+      - '20'
+  mode: single
+- id: '1740892207478'
+  alias: update_peak_price
+  description: ''
+  triggers:
+  - trigger: time
+    at: '16:01:00'
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unknown
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unavailable
+  actions:
+  - action: homeassistant.update_entity
+    metadata: {}
+    data:
+      entity_id:
+      - sensor.usca_pgpg_3212_0000_current_energy_price
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: '{{ states(''sensor.usca_pgpg_3212_0000_current_energy_price'')|float
+        }}'
+    target:
+      entity_id: input_number.bev_1_peak_price
+  mode: single
+- id: '1740892681172'
+  alias: set-super-off-peak=price
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:01:00
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unavailable
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unknown
+  actions:
+  - action: homeassistant.update_entity
+    metadata: {}
+    data:
+      entity_id:
+      - sensor.usca_pgpg_3212_0000_current_energy_price
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: '{{ states(''sensor.usca_pgpg_3212_0000_current_energy_price'') }}'
+    target:
+      entity_id: input_number.bev_1_super_off_peak_price
+  mode: single
+- id: '1740892814026'
+  alias: Update off-peak price
+  description: ''
+  triggers:
+  - trigger: time
+    at: 00:01:00
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unknown
+    - condition: state
+      entity_id: sensor.usca_pgpg_3212_0000_current_energy_price
+      state: unavailable
+  actions:
+  - action: homeassistant.update_entity
+    metadata: {}
+    data:
+      entity_id:
+      - sensor.usca_pgpg_3212_0000_current_energy_price
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: '{{ states(''sensor.usca_pgpg_3212_0000_current_energy_price'') }}'
+    target:
+      entity_id: input_number.bev_1_off_peak_price
+  mode: single
+- id: '1741838176098'
+  alias: detect_dir
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - input_number.bev_1_off_peak_price
+    below: 10
+  conditions: []
+  actions:
+  - action: shell_command.get_pwd
+    data: {}
+    response_variable: var_charger_name
+  - action: notify.mobile_app_sm_s901u
+    metadata: {}
+    data:
+      message: sent {{ var_charger_name.stdout }}
+      title: Trying...
+  mode: single
+- id: '1743468156541'
+  alias: check_daily_for_unplugged
+  description: ''
+  triggers:
+  - trigger: time
+    at: '12:01:00'
+  conditions: []
+  actions:
+  - variables:
+      charger_list: '{{ states(''input_text.charger_list'').split('', '') }}'
+  - repeat:
+      sequence:
+      - if:
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: '{{ states(''binary_sensor.openevse_fs_'' ~ repeat.item
+              ~ ''_vehicle_connected'') == ''off'' }}'
+          - condition: template
+            value_template: '{{ states(''number.'' ~ repeat.item ~''_session_cost_2'')|float
+              > 0.005 }}'
+        then:
+        - variables:
+            charger_id: '{{ repeat.item }}'
+            charge_type_text: '{{ states(''input_text.'' ~ charger_id ~ ''_charge_type'')
+              }}'
+            charge_type_helper: input_text.{{ charger_id }}_charge_type
+            user_name_text: '{{ states(''input_text.'' ~ charger_id ~ ''_user_name'')
+              }}'
+            charger_total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'')
+              }}'
+            charger_connected_sensor: binary_sensor.openevse_fs_{{ charger_id }}_vehicle_connected
+            session_cost: '{{ states(''number.'' ~ charger_id ~''_session_cost_2'')
+              }}'
+        - action: script.end_charge
+          alias: launch end charge script
+          metadata: {}
+          data:
+            user_name: '{{ user_name_text }}'
+            charger_id: '{{ charger_id }}'
+            event_type: unplug
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 6
+            milliseconds: 0
+        - action: input_number.set_value
+          metadata: {}
+          data:
+            value: '{{ charger_total_cost }}'
+          target:
+            entity_id: input_number.{{ charger_id }}_last_saved_total_cost
+      for_each: '{{ charger_list }}'
+  mode: single
+- id: '1743486757559'
+  alias: 08_load_group_ramp_down
+  description: triggers when 08 + 08a current exceeds 39, ramps down larger one 1
+    amp at a time
+  triggers:
+  - trigger: template
+    value_template: '{{ (states(''sensor.openevse_fs_08_charging_current'')| float)
+      + (states(''sensor.openevse_fs_08a_charging_current'')|float) > 39 }}'
+  conditions:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: sensor.openevse_fs_08_charging_status
+      state: charging
+    - condition: state
+      entity_id: sensor.openevse_fs_08a_charging_status
+      state: charging
+  actions:
+  - repeat:
+      sequence:
+      - variables:
+          current_08: '{{ states(''sensor.openevse_fs_08_charging_current'')| float
+            }}'
+          current_08a: '{{ states(''sensor.openevse_fs_08a_charging_current'')| float
+            }}'
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ current_08 >= current_08a }}'
+          sequence:
+          - action: select.select_previous
+            metadata: {}
+            data:
+              cycle: false
+            target:
+              entity_id: select.openevse_fs_08_charge_rate
+        - conditions:
+          - condition: template
+            value_template: '{{ current_08 < current_08a }}'
+          sequence:
+          - action: select.select_previous
+            metadata: {}
+            data:
+              cycle: false
+            target:
+              entity_id: select.openevse_fs_08a_charge_rate
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 2
+          milliseconds: 0
+      while:
+      - condition: template
+        value_template: '{{ (states(''sensor.openevse_fs_08_charging_current'')| float)
+          + (states(''sensor.openevse_fs_08a_charging_current'')|float) > 39 }}'
+  mode: single
+- id: '1745035438294'
+  alias: Plug_in save event
+  description: listens for any charger switching status to plugged in, saves charge
+    event
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.openevse_fs_01_vehicle_connected
+    - binary_sensor.openevse_fs_02_vehicle_connected
+    - binary_sensor.openevse_fs_02a_vehicle_connected
+    - binary_sensor.openevse_fs_03_vehicle_connected
+    - binary_sensor.openevse_fs_04_vehicle_connected
+    - binary_sensor.openevse_fs_05_vehicle_connected
+    - binary_sensor.openevse_fs_06_vehicle_connected
+    - binary_sensor.openevse_fs_06a_vehicle_connected
+    - binary_sensor.openevse_fs_07_vehicle_connected
+    - binary_sensor.openevse_fs_08_vehicle_connected
+    - binary_sensor.openevse_fs_08a_vehicle_connected
+    - binary_sensor.openevse_fs_09_vehicle_connected
+    - binary_sensor.openevse_fs_10_vehicle_connected
+    - binary_sensor.openevse_fs_11_vehicle_connected
+    - binary_sensor.openevse_fs_12_vehicle_connected
+    - binary_sensor.openevse_fs_12a_vehicle_connected
+    - binary_sensor.openevse_fs_13_vehicle_connected
+    - binary_sensor.openevse_fs_14_vehicle_connected
+    - binary_sensor.openevse_fs_15_vehicle_connected
+    - binary_sensor.openevse_fs_16_vehicle_connected
+    - binary_sensor.openevse_fs_17_vehicle_connected
+    - binary_sensor.openevse_fs_17a_vehicle_connected
+    - binary_sensor.openevse_fs_18_vehicle_connected
+    - binary_sensor.openevse_fs_19_vehicle_connected
+    - binary_sensor.openevse_fs_20_vehicle_connected
+    to: 'on'
+  conditions: []
+  actions:
+  - variables:
+      charger_id: '{{ trigger.entity_id | replace(''binary_sensor.openevse_fs_'','''')
+        | replace(''_vehicle_connected'','''') }}'
+      charge_type_text: '{{ states(''input_text.'' ~ charger_id ~ ''_charge_type'')
+        }}'
+      charge_type_helper: input_text.{{ charger_id }}_charge_type
+      user_name_text: '{{ states(''input_text.'' ~ charger_id ~ ''_user_name'') }}'
+      start_usage: '{{ states(''sensor.openevse_fs_'' ~ charger_id ~ ''_total_usage'')
+        }}'
+      total_cost: '{{ states(''sensor.'' ~ charger_id ~ ''_total_cost'') }}'
+      session_cost: '{{ states(''number.'' ~ charger_id ~ ''_session_cost_2'') }}'
+      user_entity_name: person.{{ user_name | replace('-','_') }}
+  - action: script.save_charge_event
+    metadata: {}
+    data:
+      ev_username: '{{ user_name }}'
+      chargerid: '{{ charger_id }}'
+      eventtype: plug-in
+      totalusage: '{{ start_usage }}'
+      totalcost: '{{ total_cost }}'
+      sessioncost: '{{ session_cost }}'
+  mode: queued
+- id: '1745042542374'
+  alias: Reload Charger
+  description: listens for any charger vehicle_connected sensor switching status to
+    unavailable for 5 min; reloads OpenEVSE integration config entry for that charger
+    via a while loop that will try every 5 minutes, up to 10 times
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.openevse_fs_01_vehicle_connected
+    - binary_sensor.openevse_fs_02_vehicle_connected
+    - binary_sensor.openevse_fs_02a_vehicle_connected
+    - binary_sensor.openevse_fs_03_vehicle_connected
+    - binary_sensor.openevse_fs_04_vehicle_connected
+    - binary_sensor.openevse_fs_05_vehicle_connected
+    - binary_sensor.openevse_fs_06_vehicle_connected
+    - binary_sensor.openevse_fs_06a_vehicle_connected
+    - binary_sensor.openevse_fs_07_vehicle_connected
+    - binary_sensor.openevse_fs_08_vehicle_connected
+    - binary_sensor.openevse_fs_08a_vehicle_connected
+    - binary_sensor.openevse_fs_09_vehicle_connected
+    - binary_sensor.openevse_fs_10_vehicle_connected
+    - binary_sensor.openevse_fs_11_vehicle_connected
+    - binary_sensor.openevse_fs_12_vehicle_connected
+    - binary_sensor.openevse_fs_12a_vehicle_connected
+    - binary_sensor.openevse_fs_13_vehicle_connected
+    - binary_sensor.openevse_fs_14_vehicle_connected
+    - binary_sensor.openevse_fs_15_vehicle_connected
+    - binary_sensor.openevse_fs_16_vehicle_connected
+    - binary_sensor.openevse_fs_17_vehicle_connected
+    - binary_sensor.openevse_fs_17a_vehicle_connected
+    - binary_sensor.openevse_fs_18_vehicle_connected
+    - binary_sensor.openevse_fs_19_vehicle_connected
+    - binary_sensor.openevse_fs_20_vehicle_connected
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions: []
+  actions:
+  - repeat:
+      sequence:
+      - action: homeassistant.reload_config_entry
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+        data:
+          entry_id: '{{ config_entry_id(trigger.entity_id) }}'
+      - delay:
+          hours: 0
+          minutes: 5
+          seconds: 0
+          milliseconds: 0
+      while:
+      - condition: and
+        conditions:
+        - condition: template
+          value_template: '{{ repeat.index < 10 }}'
+        - condition: template
+          value_template: '{{ states(trigger.entity_id) == ''unavailable'' }}'
+  mode: queued

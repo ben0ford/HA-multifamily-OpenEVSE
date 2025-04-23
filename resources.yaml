@@ -1,0 +1,20 @@
+
+    - url: /local/community/button-card/button-card.js
+      type: module
+    - url: /local/community/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /local/community/config-template-card/config-template-card.js
+      type: module
+    - url: /local/community/decluttering-card/decluttering-card.js
+      type: module
+    - url: /local/community/lovelace-expander-card/expander-card.js
+      type: module
+    - url: /local/community/lovelace-mushroom/mushroom.js
+      type: module
+    - url: /local/community/stack-in-card/stack-in-card.js
+      type: module
+    - url: /local/community/lovelace-state-switch/state-switch.js
+      type: module
+    - url: /local/community/vertical-stack-in-card/vertical-stack-in-card.js
+      type: module
+                

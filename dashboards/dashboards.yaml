@@ -1,0 +1,297 @@
+
+    frogsong-frontend:
+      mode: yaml
+      title: Frogsong Charging System
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/frogsong-frontend.yaml
+
+    frogsong-chargers:
+      mode: yaml
+      title: Frogsong Chargers
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/frogsong-chargers.yaml
+
+    frogsong-admin-chargers:
+      mode: yaml
+      title: Frogsong Charger Admin
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/frogsong-admin-chargers.yaml
+
+    fs-01:
+      mode: yaml
+      title: fs-01
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/01/fs-01.yaml  
+    admin-01:
+      mode: yaml
+      title: admin-01
+      show_in_sidebar: false
+      filename: /config/dashboards/01/admin-01.yaml
+    fs-02:
+      mode: yaml
+      title: fs-02
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/02/fs-02.yaml
+    admin-02:
+      mode: yaml
+      title: admin-02
+      show_in_sidebar: false
+      filename: /config/dashboards/02/admin-02.yaml
+    fs-02a:
+      mode: yaml
+      title: fs-02a
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/02a/fs-02a.yaml
+    admin-02a:
+      mode: yaml
+      title: admin-02a
+      show_in_sidebar: false
+      filename: /config/dashboards/02a/admin-02a.yaml
+    fs-03:
+      mode: yaml
+      title: fs-03
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/03/fs-03.yaml
+    admin-03:
+      mode: yaml
+      title: admin-03
+      show_in_sidebar: false
+      filename: /config/dashboards/03/admin-03.yaml
+    fs-04:
+      mode: yaml
+      title: fs-04
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/04/fs-04.yaml
+    admin-04:
+      mode: yaml
+      title: admin-04
+      show_in_sidebar: false
+      filename: /config/dashboards/04/admin-04.yaml
+    fs-05:
+      mode: yaml
+      title: fs-05
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/05/fs-05.yaml
+    admin-05:
+      mode: yaml
+      title: admin-05
+      show_in_sidebar: false
+      filename: /config/dashboards/05/admin-05.yaml
+    fs-06:
+      mode: yaml
+      title: fs-06
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/06/fs-06.yaml
+    admin-06:
+      mode: yaml
+      title: admin-06
+      show_in_sidebar: false
+      filename: /config/dashboards/06/admin-06.yaml
+    fs-06a:
+      mode: yaml
+      title: fs-06a
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/06a/fs-06a.yaml
+    admin-06a:
+      mode: yaml
+      title: admin-06a
+      show_in_sidebar: false
+      filename: /config/dashboards/06a/admin-06a.yaml
+    fs-07:
+      mode: yaml
+      title: fs-07
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/07/fs-07.yaml
+    admin-07:
+      mode: yaml
+      title: admin-07
+      show_in_sidebar: false
+      filename: /config/dashboards/07/admin-07.yaml
+    fs-08:
+      mode: yaml
+      title: fs-08
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/08/fs-08.yaml
+    admin-08:
+      mode: yaml
+      title: admin-08
+      show_in_sidebar: false
+      filename: /config/dashboards/08/admin-08.yaml
+    fs-08a:
+      mode: yaml
+      title: fs-08a
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/08a/fs-08a.yaml
+    admin-08a:
+      mode: yaml
+      title: admin-08a
+      show_in_sidebar: false
+      filename: /config/dashboards/08a/admin-08a.yaml
+    fs-09:
+      mode: yaml
+      title: fs-09
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/09/fs-09.yaml
+    admin-09:
+      mode: yaml
+      title: admin-09
+      show_in_sidebar: false
+      filename: /config/dashboards/09/admin-09.yaml
+    fs-10:
+      mode: yaml
+      title: fs-10
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/10/fs-10.yaml
+    admin-10:
+      mode: yaml
+      title: admin-10
+      show_in_sidebar: false
+      filename: /config/dashboards/10/admin-10.yaml
+    fs-11:
+      mode: yaml
+      title: fs-11
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/11/fs-11.yaml
+    admin-11:
+      mode: yaml
+      title: admin-11
+      show_in_sidebar: false
+      filename: /config/dashboards/11/admin-11.yaml
+    fs-12:
+      mode: yaml
+      title: fs-12
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/12/fs-12.yaml
+    admin-12:
+      mode: yaml
+      title: admin-12
+      show_in_sidebar: false
+      filename: /config/dashboards/12/admin-12.yaml
+    fs-12a:
+      mode: yaml
+      title: fs-12a
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/12a/fs-12a.yaml
+    admin-12a:
+      mode: yaml
+      title: admin-12a
+      show_in_sidebar: false
+      filename: /config/dashboards/12a/admin-12a.yaml
+    fs-13:
+      mode: yaml
+      title: fs-13
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/13/fs-13.yaml
+    admin-13:
+      mode: yaml
+      title: admin-13
+      show_in_sidebar: false
+      filename: /config/dashboards/13/admin-13.yaml
+    fs-14:
+      mode: yaml
+      title: fs-14
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/14/fs-14.yaml
+    admin-14:
+      mode: yaml
+      title: admin-14
+      show_in_sidebar: false
+      filename: /config/dashboards/14/admin-14.yaml
+    fs-15:
+      mode: yaml
+      title: fs-15
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/15/fs-15.yaml
+    admin-15:
+      mode: yaml
+      title: admin-15
+      show_in_sidebar: false
+      filename: /config/dashboards/15/admin-15.yaml
+    fs-16:
+      mode: yaml
+      title: fs-16
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/16/fs-16.yaml
+    admin-16:
+      mode: yaml
+      title: admin-16
+      show_in_sidebar: false
+      filename: /config/dashboards/16/admin-16.yaml
+    fs-17:
+      mode: yaml
+      title: fs-17
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/17/fs-17.yaml
+    admin-17:
+      mode: yaml
+      title: admin-17
+      show_in_sidebar: false
+      filename: /config/dashboards/17/admin-17.yaml
+    fs-17a:
+      mode: yaml
+      title: fs-17a
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/17a/fs-17a.yaml
+    admin-17a:
+      mode: yaml
+      title: admin-17a
+      show_in_sidebar: false
+      filename: /config/dashboards/17a/admin-17a.yaml
+    fs-18:
+      mode: yaml
+      title: fs-18
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/18/fs-18.yaml
+    admin-18:
+      mode: yaml
+      title: admin-18
+      show_in_sidebar: false
+      filename: /config/dashboards/18/admin-18.yaml
+    fs-19:
+      mode: yaml
+      title: fs-19
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/19/fs-19.yaml
+    admin-19:
+      mode: yaml
+      title: admin-19
+      show_in_sidebar: false
+      filename: /config/dashboards/19/admin-19.yaml
+    fs-20:
+      mode: yaml
+      title: fs-20
+      icon: mdi:ev-station
+      show_in_sidebar: false
+      filename: /config/dashboards/20/fs-20.yaml
+    admin-20:
+      mode: yaml
+      title: admin-20
+      show_in_sidebar: false
+      filename: /config/dashboards/20/admin-20.yaml

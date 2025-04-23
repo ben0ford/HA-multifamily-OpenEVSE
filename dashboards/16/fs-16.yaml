@@ -1,0 +1,6 @@
+# The only value that needs to be changed from dashboard to dashboard is the
+# charger number, which we get via Javascript and the dashboard URL
+
+decluttering_templates: !include /config/decluttering_templates/charger_dashboard_decluttering_templates.yaml
+
+views: !include /config/dashboards/user_charger_master.yaml

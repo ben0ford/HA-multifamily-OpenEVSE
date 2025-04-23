@@ -1,0 +1,377 @@
+  fs_01_which_button:
+    name: fs_01 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_02_which_button:
+    name: fs_02 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_02a_which_button:
+    name: fs_02a Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_03_which_button:
+    name: fs_03 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_04_which_button:
+    name: fs_04 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_05_which_button:
+    name: fs_05 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_06_which_button:
+    name: fs_06 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_06a_which_button:
+    name: fs_06a Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_07_which_button:
+    name: fs_07 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_08_which_button:
+    name: fs_08 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_08a_which_button:
+    name: fs_08a Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+    
+  fs_09_which_button:
+    name: fs_09 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_10_which_button:
+    name: fs_10 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_11_which_button:
+    name: fs_11 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_12_which_button:
+    name: fs_12 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_12a_which_button:
+    name: fs_12a Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_13_which_button:
+    name: fs_13 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_14_which_button:
+    name: fs_14 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_15_which_button:
+    name: fs_15 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_16_which_button:
+    name: fs_16 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_17_which_button:
+    name: fs_17 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_17a_which_button:
+    name: fs_17a Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_18_which_button:
+    name: fs_18 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_19_which_button:
+    name: fs_19 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+
+  fs_20_which_button:
+    name: fs_20 Which Button
+    initial: 0
+    min: 0
+    max: 40
+    step: 5
+    mode: box
+    
+  01_last_saved_total_cost:
+    name: 01 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  02_last_saved_total_cost:
+    name: 02 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  02a_last_saved_total_cost:
+    name: 02a Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  03_last_saved_total_cost:
+    name: 03 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  04_last_saved_total_cost:
+    name: 04 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  05_last_saved_total_cost:
+    name: 05 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  06_last_saved_total_cost:
+    name: 06 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  06a_last_saved_total_cost:
+    name: 06a Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  07_last_saved_total_cost:
+    name: 07 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  08a_last_saved_total_cost:
+    name: 08a Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+
+  08_last_saved_total_cost:
+    name: 08 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  09_last_saved_total_cost:
+    name: 09 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  10_last_saved_total_cost:
+    name: 10 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  11_last_saved_total_cost:
+    name: 11 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  12_last_saved_total_cost:
+    name: 12 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  12a_last_saved_total_cost:
+    name: 12a Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  13_last_saved_total_cost:
+    name: 13 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  14_last_saved_total_cost:
+    name: 14 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  15_last_saved_total_cost:
+    name: 15 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  16_last_saved_total_cost:
+    name: 16 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  17_last_saved_total_cost:
+    name: 17 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  17a_last_saved_total_cost:
+    name: 17a Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  18_last_saved_total_cost:
+    name: 18 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  19_last_saved_total_cost:
+    name: 19 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+    
+  20_last_saved_total_cost:
+    name: 20 Last Saved Total Cost
+    min: 0
+    max: 10000
+    step: .01
+    mode: box
+
+
+

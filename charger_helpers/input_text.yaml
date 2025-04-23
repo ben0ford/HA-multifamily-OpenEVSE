@@ -1,0 +1,207 @@
+# two text fields.
+# charge_type determines colors, icons, and messages
+
+  01_charge_type:
+    name: 01 Charge Type
+    max: 20    
+    
+  02_charge_type:
+    name: 02 Charge Type
+    max: 20    
+    
+  02a_charge_type:
+    name: 02a Charge Type
+    max: 20    
+    
+  03_charge_type:
+    name: 03 Charge Type
+    max: 20    
+    
+  04_charge_type:
+    name: 04 Charge Type
+    max: 20    
+    
+  05_charge_type:
+    name: 05 Charge Type
+    max: 20    
+    
+  06_charge_type:
+    name: 06 Charge Type
+    max: 20    
+    
+  06a_charge_type:
+    name: 06a Charge Type
+    max: 20    
+    
+  07_charge_type:
+    name: 07 Charge Type
+    max: 20    
+    
+  08_charge_type:
+    name: 08 Charge Type
+    max: 20    
+    
+  08a_charge_type:
+    name: 08a Charge Type
+    max: 20    
+    
+  09_charge_type:
+    name: 09 Charge Type
+    max: 20    
+    
+  10_charge_type:
+    name: 10 Charge Type
+    max: 20    
+    
+  11_charge_type:
+    name: 11 Charge Type
+    max: 20    
+    
+  12_charge_type:
+    name: 12 Charge Type
+    max: 20    
+    
+  12a_charge_type:
+    name: 12a Charge Type
+    max: 20    
+    
+  13_charge_type:
+    name: 13 Charge Type
+    max: 20    
+    
+  14_charge_type:
+    name: 14 Charge Type
+    max: 20    
+    
+  15_charge_type:
+    name: 15 Charge Type
+    max: 20    
+    
+  16_charge_type:
+    name: 16 Charge Type
+    max: 20    
+    
+  17_charge_type:
+    name: 17 Charge Type
+    max: 20    
+    
+  17a_charge_type:
+    name: 17a Charge Type
+    max: 20    
+    
+  18_charge_type:
+    name: 18 Charge Type
+    max: 20    
+    
+  19_charge_type:
+    name: 19 Charge Type
+    max: 20
+    
+  20_charge_type:
+    name: 20 Charge Type
+    max: 20
+
+# user_name is displayed in the charging stats
+
+  01_user_name:
+    name: 01 User Name
+    max: 20
+
+  02_user_name:
+    name: 02 User Name
+    max: 20
+
+  02a_user_name:
+    name: 02a User Name
+    max: 20
+
+  03_user_name:
+    name: 03 User Name
+    max: 20
+
+  04_user_name:
+    name: 04 User Name
+    max: 20
+
+  05_user_name:
+    name: 05 User Name
+    max: 20
+
+  06_user_name:
+    name: 06 User Name
+    max: 20
+
+  06a_user_name:
+    name: 06a User Name
+    max: 20
+
+  07_user_name:
+    name: 07 User Name
+    max: 20
+
+  08_user_name:
+    name: 08 User Name
+    max: 20
+
+  08a_user_name:
+    name: 08a User Name
+    max: 20
+
+  09_user_name:
+    name: 09 User Name
+    max: 20
+
+  10_user_name:
+    name: 10 User Name
+    max: 20
+
+  11_user_name:
+    name: 11 User Name
+    max: 20
+
+  12_user_name:
+    name: 12 User Name
+    max: 20
+
+  12a_user_name:
+    name: 12a User Name
+    max: 20
+
+  13_user_name:
+    name: 13 User Name
+    max: 20
+
+  14_user_name:
+    name: 14 User Name
+    max: 20
+
+  15_user_name:
+    name: 15 User Name
+    max: 20
+
+  16_user_name:
+    name: 16 User Name
+    max: 20
+
+  17_user_name:
+    name: 17 User Name
+    max: 20
+
+  17a_user_name:
+    name: 17a User Name
+    max: 20
+
+  18_user_name:
+    name: 18 User Name
+    max: 20
+
+  19_user_name:
+    name: 19 User Name
+    max: 20
+
+  20_user_name:
+    name: 20 User Name
+    max: 20
+
+
+

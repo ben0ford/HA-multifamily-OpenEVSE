@@ -1,0 +1,319 @@
+  charger_start_stop_template:
+    card:
+      type: custom:button-card
+      show_name: true
+      show_icon: true
+      show_label: '[[var_true_or_false]]'
+      tap_action:
+        action: call-service
+        service: script.start_charge
+        data:
+          user_name: '[[[ return user.name; ]]]'
+          charger_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return result;
+            ]]]
+          charge_type: '[[var_charge_type]]'
+      double_tap_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: '[[var_number_value]]'
+      hold_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: 0
+      name: '[[var_name]]'
+      label: '[[var_label]]'
+      color_type: card
+      color: '[[var_color]]'
+      card_size: 1
+      aspect_ratio: 3/1
+  charger_stop_template:
+    card:
+      type: custom:button-card
+      show_name: true
+      show_icon: true
+      show_label: '[[var_true_or_false]]'
+      tap_action:
+        confirmation:
+          text: |
+            [[[
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              var charge_user = states['input_text.' + result + '_user_name'].state;
+              let possessive = "\'s";
+              if (charge_user.length == 1) possessive = "this";
+              return 'Are you sure you want to end ' + charge_user + possessive + ' charging session?';
+            ]]]
+        action: call-service
+        service: script.start_charge
+        data:
+          user_name: '[[[ return user.name; ]]]'
+          charger_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return result;
+            ]]]
+          charge_type: '[[var_charge_type]]'
+      double_tap_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: '[[var_number_value]]'
+      hold_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: 0
+      name: '[[var_name]]'
+      label: '[[var_label]]'
+      color_type: card
+      color: '[[var_color]]'
+      card_size: 1
+      aspect_ratio: 3/1
+  charger_override_template:
+    card:
+      type: custom:button-card
+      show_name: true
+      show_icon: true
+      show_label: '[[var_true_or_false]]'
+      tap_action:
+        confirmation:
+          text: 'Are you sure you want to override the time-of-use restriction and charge more expensively?'
+        action: call-service
+        service: script.start_charge
+        data:
+          user_name: '[[[ return user.name; ]]]'
+          charger_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return result;
+            ]]]
+          charge_type: '[[var_charge_type]]'
+      double_tap_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: '[[var_number_value]]'
+      hold_action:
+        action: call-service
+        service: input_number.set_value
+        data:
+          entity_id: |
+            [[[ 
+              let a = window.location.href;
+              let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+              let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+              let result = folder.replace("fs-","");
+              return 'input_number.fs_' + result + '_which_button';
+            ]]]
+          value: 0
+      name: '[[var_name]]'
+      label: '[[var_label]]'
+      color_type: card
+      color: '[[var_color]]'
+      card_size: 1
+      aspect_ratio: 3/1
+  charger_header:
+    card:
+      type: custom:button-card
+      styles:
+        card:
+          - font-size: 30px
+          - background-color: rgb(0,204,0)
+          - box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.66)
+      name: |
+          [[[ 
+            let a = window.location.href;
+            let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+            let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+            let result = folder.replace("fs-","");
+            return 'Charger FS-' + result;
+          ]]]
+      alignment: center
+  charger_status_user_card:
+    card:
+      type: custom:button-card
+      entity: |
+        [[[ 
+          let a = window.location.href;
+          let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+          let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+          let result = folder.replace("fs-","");
+          return 'input_text.' + result + '_user_name';
+        ]]]
+      show_state: true
+      show_name: false
+      show_icon: false
+      show_label: false
+      color_type: card
+      card_size: 1
+      aspect_ratio: 9/1
+      icon: '[[var_icon]]'
+      styles:
+        card:
+          - background-color: transparent
+  charger_status_status_card:
+    card:
+      type: custom:button-card
+      entity: |
+        [[[ 
+          let a = window.location.href;
+          let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+          let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+          let result = folder.replace("fs-","");
+          return 'input_text.' + result + '_charge_type';
+        ]]]
+      show_state: true
+      show_name: false
+      show_icon: false
+      show_label: false
+      color_type: card
+      card_size: 1
+      aspect_ratio: 9/1
+      icon: '[[var_icon]]'
+      styles:
+        card:
+          - background-color: transparent
+  charger_status_other_card:
+    card:
+      type: custom:button-card
+      entity: |
+        [[[ 
+          let a = window.location.href;
+          let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+          let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+          let result = folder.replace("fs-","");
+          return '[[var_binary]]sensor.openevse_fs_' + result + '_[[var_sensor]]';
+        ]]]
+      layout: icon_state
+      show_state: true
+      show_name: false
+      show_icon: true
+      show_label: false
+      name: '[[var_name]]'
+      card_size: 1
+      aspect_ratio: 5.5/1
+      icon: '[[var_icon]]'
+      styles:
+        card:
+          - background-color: transparent
+  charger_status_cost_card:
+    card:
+      type: custom:button-card
+      entity: |
+        [[[ 
+          let a = window.location.href;
+          let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+          let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+          let result = folder.replace("fs-","");
+          return 'number.' + result + '_session_cost_2';
+        ]]]
+      layout: icon_state
+      state_display: >
+        [[[
+          let a = entity.state;
+          let b = parseFloat(a);
+          let c = Math.abs(b);
+          return c.toFixed(2);
+        ]]]
+      show_state: true
+      show_units: false
+      show_name: true
+      show_icon: true
+      show_label: false
+      format: precision2
+      label: 'Session cost'
+      name: '[[var_name]]'
+      card_size: 1
+      aspect_ratio: 3/1
+      icon: '[[var_icon]]'
+      styles:
+        card:
+          - background-color: transparent
+  charger_addl_info_card:
+    card:
+      type: custom:button-card
+      entity: |
+        [[[ 
+          let a = window.location.href;
+          let path = a.substring(0, a.lastIndexOf('/')); // Remove everything after the last '/'
+          let folder = path.substring(path.lastIndexOf('/') + 1); // Extract the last part of the remaining string
+          let result = folder.replace("fs-","");
+          return 'input_number.fs_' + result + '_which_button';
+        ]]]
+      show_icon: false
+      show_label: true
+      show_name: false
+      show_state: true
+      triggers_update: all
+      styles:
+        state:
+          - white-space: normal
+      state:
+        - value: 0
+          state_display: 'Double tap any Action button for more info'
+        - value: 5
+          state_display: 'Pressing Normal charge will start charging immediately, unless it is between 4:00 pm and 9:00 pm,charging will wait or pause until 9:00 pm'
+        - value: 10
+          state_display: 'Pressing Eco charge will start charging immediately if it is between 9:00 am and 2:00 pm; otherwise it will wait until 9:00 am. It will pause between 4:00 pm and 9:00 pm.'
+        - value: 15
+          state_display: 'Pressing Override charge will start charging immediately regardless of time of day, and will ignorethe 4:00 pm - 9:00 pm pause.'
+        - value: 20
+          state_display: 'Pressing the Stop button will end whatever current charging session is happening. You will be asked to confirm the stop'
+
+        

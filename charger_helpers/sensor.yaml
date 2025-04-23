@@ -1,0 +1,200 @@
+# note: requires restart to load changes
+
+  - platform: integration
+    source: sensor.01_cost_per_hour
+    name: 01_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.02_cost_per_hour
+    name: 02_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.02a_cost_per_hour
+    name: 02a_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.03_cost_per_hour
+    name: 03_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.04_cost_per_hour
+    name: 04_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.05_cost_per_hour
+    name: 05_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.06_cost_per_hour
+    name: 06_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.06a_cost_per_hour
+    name: 06a_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.07_cost_per_hour
+    name: 07_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.08_cost_per_hour
+    name: 08_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.08a_cost_per_hour
+    name: 08a_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.09_cost_per_hour
+    name: 09_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.10_cost_per_hour
+    name: 10_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.11_cost_per_hour
+    name: 11_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.12_cost_per_hour
+    name: 12_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.12a_cost_per_hour
+    name: 12a_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.13_cost_per_hour
+    name: 13_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.14_cost_per_hour
+    name: 14_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.15_cost_per_hour
+    name: 15_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.16_cost_per_hour
+    name: 16_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.17_cost_per_hour
+    name: 17_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.17a_cost_per_hour
+    name: 17a_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.18_cost_per_hour
+    name: 18_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.19_cost_per_hour
+    name: 19_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h
+
+
+  - platform: integration
+    source: sensor.20_cost_per_hour
+    name: 20_total_cost
+    max_sub_interval: 00:01:00
+    method: left
+    unit_time: h

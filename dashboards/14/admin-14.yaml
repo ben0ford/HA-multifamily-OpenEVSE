@@ -1,0 +1,3 @@
+views: !include /config/dashboards/admin_charger_master.yaml
+# views:
+

@@ -1,0 +1,403 @@
+  - sensor:
+
+      - name: "01_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_01_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_01_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "02_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_02_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_02_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "02a_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_02a_charging_current')|float * states('sensor.electricity_rate')| float * states('sensor.openevse_fs_02a_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "03_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_03_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_03_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "04_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_04_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_04_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "05_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_05_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_05_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "06_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_06_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_06_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "06a_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_06a_charging_current')|float * states('sensor.electricity_rate')| float * states('sensor.openevse_fs_06a_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "07_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_07_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_07_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "08_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_08_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_08_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "08a_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_08a_charging_current')|float * states('sensor.electricity_rate')| float * states('sensor.openevse_fs_08a_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "09_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_09_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_09_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "10_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_10_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_10_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "11_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_11_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_11_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "12_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_12_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_12_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "12a_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_12a_charging_current')|float * states('sensor.electricity_rate')| float * states('sensor.openevse_fs_12a_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "13_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_13_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_13_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "14_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_14_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_14_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "15_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_15_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_15_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "16_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_16_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_16_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "17_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_17_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_17_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "17a_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_17a_charging_current')|float * states('sensor.electricity_rate')| float * states('sensor.openevse_fs_17a_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "18_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_18_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_18_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "19_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_19_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_19_charging_voltage') | float  /1000 }}
+        state_class: measurement
+
+      - name: "20_cost_per_hour"
+        unit_of_measurement: "$/h"
+        state: >
+          {{ states('sensor.openevse_fs_20_charging_current')|float *  states('sensor.electricity_rate')| float * states('sensor.openevse_fs_20_charging_voltage') | float  /1000 }}
+        state_class: measurement
+        
+  - number:
+      - name: "01_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.01_total_cost')|float - states('input_number.01_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "02_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.02_total_cost')|float - states('input_number.02_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "02a_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.02a_total_cost')|float - states('input_number.02a_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "03_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.03_total_cost')|float - states('input_number.03_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "04_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.04_total_cost')|float - states('input_number.04_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "05_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.05_total_cost')|float - states('input_number.05_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "06_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.06_total_cost')|float - states('input_number.06_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "06a_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.06a_total_cost')|float - states('input_number.06a_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "07_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.07_total_cost')|float - states('input_number.07_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "08_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.08_total_cost')|float - states('input_number.08_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "08a_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.08a_total_cost')|float - states('input_number.08a_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "09_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.09_total_cost')|float - states('input_number.09_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "10_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.10_total_cost')|float - states('input_number.10_last_saved_total_cost')| float) | round(2, default=0)}}
+
+      - name: "11_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.11_total_cost')|float - states('input_number.11_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "12_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.12_total_cost')|float - states('input_number.12_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "12a_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.12a_total_cost')|float - states('input_number.12a_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "13_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.13_total_cost')|float - states('input_number.13_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "14_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.14_total_cost')|float - states('input_number.14_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "15_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.15_total_cost')|float - states('input_number.15_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "16_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.16_total_cost')|float - states('input_number.16_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "17_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.17_total_cost')|float - states('input_number.17_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "17a_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.17a_total_cost')|float - states('input_number.17a_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "18_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.18_total_cost')|float - states('input_number.18_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "19_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.19_total_cost')|float - states('input_number.19_last_saved_total_cost')| float) | round(2, default=0)}}
+        
+      - name: "20_session_cost_2"
+        unit_of_measurement: "$"
+        icon: "mdi:currency-usd"
+        set_value: null
+        step: .01
+        min: 0.00
+        max: 100.00
+        state: >
+          {{ (states('sensor.20_total_cost')|float - states('input_number.20_last_saved_total_cost')| float) | round(2, default=0)}}
+        

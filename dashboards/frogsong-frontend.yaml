@@ -1,0 +1,5 @@
+decluttering_templates: !include_dir_merge_named /config/decluttering_templates/main_page_templates
+
+views:
+  - !include /config/dashboards/fs-chargers.yaml
+  - !include /config/dashboards/fs-admin-chargers.yaml

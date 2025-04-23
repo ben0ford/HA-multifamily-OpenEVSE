@@ -1,0 +1,76 @@
+# note requires restart to load changes
+
+  01_session_cost:
+    source: sensor.01_total_cost
+
+  02_session_cost:
+    source: sensor.02_total_cost
+
+  02a_session_cost:
+    source: sensor.02a_total_cost
+
+  03_session_cost:
+    source: sensor.03_total_cost
+
+  04_session_cost:
+    source: sensor.04_total_cost
+
+  05_session_cost:
+    source: sensor.05_total_cost
+
+  06_session_cost:
+    source: sensor.06_total_cost
+
+  06a_session_cost:
+    source: sensor.06a_total_cost
+
+  07_session_cost:
+    source: sensor.07_total_cost
+
+  08_session_cost:
+    source: sensor.08_total_cost
+
+  08a_session_cost:
+    source: sensor.08a_total_cost
+
+  09_session_cost:
+    source: sensor.09_total_cost
+
+  10_session_cost:
+    source: sensor.10_total_cost
+
+  11_session_cost:
+    source: sensor.11_total_cost
+
+  12_session_cost:
+    source: sensor.12_total_cost
+
+  12a_session_cost:
+    source: sensor.12a_total_cost
+
+  13_session_cost:
+    source: sensor.13_total_cost
+
+  14_session_cost:
+    source: sensor.14_total_cost
+
+  15_session_cost:
+    source: sensor.15_total_cost
+
+  16_session_cost:
+    source: sensor.16_total_cost
+
+  17_session_cost:
+    source: sensor.17_total_cost
+
+  17a_session_cost:
+    source: sensor.17a_total_cost
+
+  18_session_cost:
+    source: sensor.18_total_cost
+
+  19_session_cost:
+    source: sensor.19_total_cost
+
+  20_session_cost:
+    source: sensor.20_total_cost
