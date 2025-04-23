@@ -138,6 +138,27 @@ Helpers are in the directory config/charger_helpers. Each charger uses these hel
 #### Calculating costs
 A little more detail: The OpenEVSE integration provides the ```sensor.openevse_fs_01_charging_current``` sensor. Multiplying this by the present electricity rate and adjusting units correctly gives a cost per hour sensor. The integral (in the calculus sense) over time of "cost per hour" is "cost" for the period of time that was integrated.
 
+### UI-controlled entities
+We still have a few entities that are built through the UI and we haven't bothered to move them to yaml.
+* ```input_number.bev_1_off_peak_price``` stores the off-peak electricity price (set by automation, above)
+* ```input_number.bev_1_peak_price``` stores the peak price
+* ```input_number.bev_1_super_off_peak_price``` stores the super off-peak price
+* ```input_text.charger_list``` list of our charger IDs. Still have to move some scripts/automations to use this list rather than hard-code in all chargers.
+* ```binary_sensor.eco_charge_time```: time-based sensor; "On" during super-off-peak pricing, currently 9:00 a.m. to 2:00 p.m. for us. "Off" otherwise
+* ```sensor.electricity_rate```: template sensor that returns the current electricity rate. Unit of measurement is $/kWh; template is
+  ```
+  {% set current_hour = strptime(states('sensor.time'), "%H:%M").hour %}
+          {% if  16 <= current_hour < 21 %}
+            {{ states('input_number.bev_1_peak_price') }}
+          {% elif 9 <= current_hour < 14 %}
+            {{ states('input_number.bev_1_super_off_peak_price') }}
+          {% else%}
+            {{ states('input_number.bev_1_off_peak_price') }}
+          {% endif %}
+  ```
+* ```binary_sensor.peak_charge_time```: time-based sensor; "On" during peak time (4:00-9:00 p.m. for us); "Off" otherwise
+  
+
 ## Installing a charger
 Get everything working for one charger first.
 
