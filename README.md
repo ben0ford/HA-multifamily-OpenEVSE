@@ -1,7 +1,7 @@
 # HA-multifamily-OpenEVSE
 Home Assistant (HA) scripts, automations, helpers, etc. to enable management of multiple OpenEVSE chargers: user management, cost logging, etc. 
 
-We have 25 OpenEVSE chargers in a shared parking lot for a community of 30 homes. This Home Assistant implementation allows all users to use any charger, with several charging options. User charging session costs are computed live, based on automatically-updated electricity rates; sessions and costs are logged for billing purposes. Many decisions are particular to our application (e.g. letting all users see who is charging where). Also, neither of us who wrote this is an accomplished programmer, so apologies if things are clunky.
+We have 25 OpenEVSE chargers in a shared parking lot for a community of 30 homes. This Home Assistant implementation allows all users to use any charger, with several charging options. User charging session costs are computed live (based on automatically-updated electricity rates); sessions and costs are logged for billing purposes. Many decisions are particular to our application (e.g. letting all users see who is charging where). Also, neither of us who wrote this is an accomplished programmer, so apologies if things are clunky.
 
 This is not a plug-and-play HA "integration." You'll need to have someone who is willing to dive into the yaml files and their Jinja2 and javascript templates. If anyone wants to create a more robust and transportable system, we're happy to help if we can.
 
