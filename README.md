@@ -168,6 +168,7 @@ In the OpenEVSE setup process, or in the web interface, set the following on the
 * Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
 * Host Name: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
 * Time zone
+* Schedulers for when you want the charger to charge in case of a "normal" charging session
 * User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
 
 Assign the charger a fixed IP address in your DHCP server. The charger needs to be in the same local network as the HA server.
