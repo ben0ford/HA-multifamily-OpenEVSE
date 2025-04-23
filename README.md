@@ -105,7 +105,7 @@ Sample sequence of events when a user "ben" wants to charge at charger FS-09:
    * user_unit: "{{ user_unit }}" # unit number associated to the user; our version of "account"
 ```
 6. ```script.start_charge``` turns off "override" on charger, so charger controls charging (charger has 16:00 disable/21:00 enable schedulers set). In the case of an "eco" charge, script just sets ```charge_type``` to "eco waiting" and then an automation at 9:00 turns the charger override off. In the case of "override," script turns charger override on, state "enabled," to ignore charger's schedulers.
-7. ```script.start_charge`` exits
+7. ```script.start_charge``` exits
 
 The charge continues under charger control until the car says "no more" or the charger's "Stop" button on its dashboard is pressed. When charger current drops to 0, the no_current automation runs script.save_charge_event to log an event, and sets the charge_type helper to "charge complete" (which has the effect of switching the icon on the Overview dashboard to "zzz").
 
