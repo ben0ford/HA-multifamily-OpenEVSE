@@ -121,12 +121,12 @@ Finally, when the user unplugs, the ```end_charge_unplug``` automation runs ```s
 
 ### Scripts
 * ```end_charge```: called by other automations and scripts. Receives ```user_name```, ```charger_id```, ```event_type``` from calling entity, runs ```script.save_charge_event```, disables charger, sets ```charge_type``` to "available", clears ```user_name```
-* ```save_charge_event```: uses File integration to save a line to a comma-separated values file. Fields saved include ```user_unit```, time, ```user_name```, ```charger_id```, ```event_type```, ```total_usage```, ```total_cost```, and ```session_cost``` (```session_cost``` only saved for unplug events)
+* ```save_charge_event```: uses File integration to save a line to a comma-separated values file. Fields saved include ```user_unit```, ```time```, ```user_name```, ```charger_id```, ```event_type```, ```total_usage```, ```total_cost```, and ```session_cost``` (```session_cost``` only saved for unplug events)
 * ```start_charge```: receives ```user_name```, ```charger_id```, ```charge_type``` from button press. Sets ```charge_type``` helper and ```user_name``` helper, saves start event, starts appropriate charge (see Sequence section above)
 
 ### Helpers
 Helpers are in the directory config/charger_helpers. Each charger uses these helpers (using name for charger FS-01)
-* ```input_number.fs_0_which_button``` : controls display of additional info on the charger dashboard
+* ```input_number.fs_01_which_button``` : controls display of additional info on the charger dashboard
 * ```input_number.01_last_saved_total_cost``` : saves the "total_cost" value at the end of the previous charging session
 * ```input_text.01_user_name```
 * ```input_text.01_charge_type```
