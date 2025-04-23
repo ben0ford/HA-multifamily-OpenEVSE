@@ -7,7 +7,9 @@ This is not a plug-and-play HA "integration." You'll need to have someone who is
 
 Our chargers are actually former JuiceBox chargers with their control boards replaced with OpenEVSE drop-in replacements ([version 1--metal box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v1-metal-black-and-orange); [version 2--plastic box](https://store.openevse.com/collections/all-products/products/replacement-electronics-for-juicebox-v2-plastic-grey-and-white)). Also get a [temperature sensor](https://store.openevse.com/collections/all-products/products/temperature-sensor) since the replacement board doesn't have one onboard. The brain-transplant chargers behave exactly like a standard OpenEVSE build, as far as I can tell.
 
-Thirty-three users have been using the system for a few weeks now, after a month of more limited testing, and it's SO much more stable and functional than Juicenet ever was. Plus our data for billing is much better.
+Thirty-three users have been using the system for a few weeks now, after a month of more limited testing, and it's SO much more stable and functional than Juicenet ever was. Plus our data for billing is much better. 
+
+The box you hang on the wall is called an EVSE: Electric Vehicle Supply Equipment. In this document we use the less-accurate but more common term "charger."
 
 ## Functionality
 
@@ -50,6 +52,8 @@ The Admin Tools charger button for a charger leads to an Admin dashboard which g
 
 ## General HA setup
 
+For this to be useful, your users' phones will all have to be able to connect to the HA server. We have a site-wide local network so we have not opened up any remote access. Our users just know that they have to connect to wifi in the parking lot or at home to connect and interact with the chargers. It is possible to set up your HA to allow remote access via the [Home Assistant Cloud](https://www.nabucasa.com/). However, your HA server and chargers do need to be on the same local network.
+
 ### Integrations required:
 * [MIDAS](https://github.com/MattDahEpic/ha-midas) (California-specific, for automatically updating utility rates)
 * [OpenEVSE](https://github.com/firstof9/openevse/) Component to integrate with OpenEVSE chargers. There are two integrations with this name; be sure you get the one by firstof9.
@@ -68,7 +72,7 @@ We also use the integrations below, though they are not specific to the OpenEVSE
 * [Google Drive](https://www.home-assistant.io/integrations/google_drive/) (for storing backups)
 
 ### Dashboards
-All dashboards are in yaml mode so that we can use !include statements.
+All dashboards are in yaml mode so that we can use !include statements. We are running a Home Assistant Green. On our machine, /homeassistant is the root directory for all HA files, but it's referenced as /config when !include'ing files.
 
 Charger dashboards are all identical files, with the charger number determined simply from the URL for the dashboard. So, for instance, the dashboard ```/homeassistant/dashboards/08/fs-08.yaml```, in total, is below. This allows us to change all charger dashboards at once by just changing the !include'd file. Same idea for the admin charger dashboards. We make ample use of HA's custom:button-card (to get javascript templating) and decluttering templates.
 
@@ -133,7 +137,9 @@ Helpers are in the directory config/charger_helpers. Each charger uses these hel
 A little more detail: The OpenEVSE integration provides the ```sensor.openevse_fs_01_charging_current``` sensor. Multiplying this by the present electricity rate and adjusting units correctly gives a cost per hour sensor. The integral (in the calculus sense) over time of "cost per hour" is "cost" for the period of time that was integrated.
 
 ## Installing a charger
-An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use it for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
+Get everything working for one charger first.
+
+An OpenEVSE charger runs its own web server for charger setup (and for charger control, but we don't use the web interface for control). Use OpenEVSE's setup instructions to get the charger connected to your wifi. We created a separate SSID just for chargers to use, so the password isn't out in the wild as it's a pain to change on 25 chargers.
 
 In the OpenEVSE setup process, or in the web interface, set the following on the charger:
 * Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
@@ -141,4 +147,10 @@ In the OpenEVSE setup process, or in the web interface, set the following on the
 * Time zone
 * User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
 
+Assign the charger a fixed IP address in your DHCP server. The charger needs to be in the same local network as the HA server.
 
+In HA, go to the integrations page and then the OpenEVSE page. At the bottom of the "Integration Entries" list, "Add entry." The alias here is important, as all entity names are derived from it. For our naming convention, enter (for example) ```openevse_fs_01``` here. You'll also enter the charger's IP address and user name and password that you assigned on the charger. Leave the other optional entries blank, scroll to the bottom, and click Submit. If successful, around 60 entities will be created. 
+
+## Future plans
+### Circuit sharing
+Ten of our chargers are on shared circuits, in pairs. They are presently set to 20 amp max so as not to exceed the 40 amp max continuous load on our 40 amp circuits. We intend to insert a load balancing routine in the start_charge script, and again in the end_charge automations, that will set the max_current controls on the chargers to safe values--probably 20/20 when two charges are happening, 40/0 when just one.
