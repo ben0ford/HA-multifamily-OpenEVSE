@@ -177,7 +177,7 @@ In HA, go to the integrations page and then the OpenEVSE page. At the bottom of 
 
 ## Future plans
 ### Circuit sharing
-Ten of our chargers are on shared circuits, in pairs. They are presently set to 20 amp max so as not to exceed the 40 amp max continuous load on our 40 amp circuits. We intend to insert a load balancing routine in the start_charge script, and again in the end_charge automations, that will set the max_current controls on the chargers to safe values--probably 20/20 when two charges are happening, 40/0 when just one.
+Ten of our chargers are on shared circuits, in pairs. They are presently set to 20 amp max so as not to exceed the 40 amp max continuous load on our 50 amp circuits. We intend to insert a load balancing routine in the start_charge script, and again in the end_charge automations, that will set the max_current controls on the chargers to safe values--probably 20/20 when two charges are happening, 40/0 when just one.
 
 ### User charging history
 With a python script we could return all lines associated with the user from the log file, formatted in a table. Because we log so many events we might be more selective than that.
