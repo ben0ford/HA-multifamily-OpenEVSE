@@ -166,12 +166,16 @@ An OpenEVSE charger runs its own web server for charger setup (and for charger c
 
 In the OpenEVSE setup process, or in the web interface, set the following on the charger:
 * Max Current (Settings --> EVSE). Ours are 50 amp circuits, so 40 amp max
-* Host Name: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
+* Hostname: Decide on your pattern and be consistent. We use FS-XX(a)—e.g. FS-01, FS-02, FS-02a. The pairs with an "a" variant share a circuit. The scripts and automations depend on being eable to extract the unique part of the name (e.g. 17, 17a) by stripping out the FS-
 * Time zone
 * Schedulers for when you want the charger to charge in case of a "normal" charging session
 * User name and Password for http interface. Make them the same for all chargers. Important to set so that users can't connect directly to chargers and initiate charging without HA control (and record-keeping)
 
-Assign the charger a fixed IP address in your DHCP server. The charger needs to be in the same local network as the HA server.
+In your router or network controller that runs DHCP (network addresses):
+* The charger might show up with the hostname you assigned on the charger. A few of our did; most showed up with a hostname based on the ESP32 wifi chip in the chargers
+* If not already correct, change the hostname to the one you assigned on the charger
+* Assign the charger a fixed IP address. On our Unifi controller, I just copy the DHCP-assigned address, go into settings for the charger, click Fixed IP, and paste in the copied address
+* The charger needs to be in the same local network as the HA server
 
 In HA, go to the integrations page and then the OpenEVSE page. At the bottom of the "Integration Entries" list, "Add entry." The alias here is important, as all entity names are derived from it. For our naming convention, enter (for example) ```openevse_fs_01``` here. You'll also enter the charger's IP address and user name and password that you assigned on the charger. Leave the other optional entries blank, scroll to the bottom, and click Submit. If successful, around 60 entities will be created. 
 
